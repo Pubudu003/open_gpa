@@ -39,7 +39,8 @@ const userSchema = new mongoose.Schema({
     // Field to store the user's batch year
     batchYear: {
         type: String,
-        required: [true, "Your batch year is required"]
+        enum: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "Other"],
+        default: "Other"
     },
     // Field for storing a verification token (e.g., for email verification)
     verificationToken: String,
