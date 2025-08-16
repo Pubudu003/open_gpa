@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import { sendVerificationEmail } from "../nodemailer/emails.js";
+import { VERIFICATION_EMAIL_TEMPLATE } from "../nodemailer/emailTemplates.js";
 import { generateVerificationCode } from "../utils/generateVerificationCode.js";
 
 export const signup = async (req, res) => {
@@ -24,6 +26,24 @@ export const signup = async (req, res) => {
             verificationTokenExpiry: Date.now() + 1000 * 60 * 60 * 24, // 24 hours
         });
         await user.save();
+
+        const verificationUrl = `${process.env.FRONTEND_URL}/verifyemail/${verificationToken}`;
+
+        const message = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationUrl}", verificationUrl);
+
+        try {
+            await sendVerificationEmail({
+                email: user.email,
+                subject: "Verify Your Email for GPA Calculator",
+                message,
+            })
+        } catch (sendEmailError) {
+            console.log("Error sending verification email:", sendEmailError);
+            user.verificationToken = undefined;
+            user.verificationTokenExpiry = undefined;
+            await user.save();
+            throw new Error("Error sending verification email");
+        }
 
         res.status(201).json({
             success: true,
