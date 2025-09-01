@@ -7,7 +7,6 @@ import { cleanEnv, port, str } from "envalid"; // for env validation
 
 import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./db/connectDB.js";
-import helmet from "helmet";
 
 // Load and validate environment variables
 dotenv.config();
@@ -33,7 +32,14 @@ app.use(
 app.use(morgan("dev")); // Log HTTP requests
 app.use(express.json());
 
+// Routes
 app.use("/api/auth", authRoutes);
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: "Something went wrong!" });
+});
 
 // Graceful shutdown
 const server = app.listen(PORT, async () => {
