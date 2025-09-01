@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import helmet from "helmet"; // for secure HTTP headers
+import morgan from "morgan"; // for request logging
 import { cleanEnv, port, str } from "envalid"; // for env validation
 
 import authRoutes from "./routes/auth.route.js";
@@ -28,6 +30,7 @@ app.use(
         // credentials: true, // If need to send cookies
     })
 );
+app.use(morgan("dev")); // Log HTTP requests
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
