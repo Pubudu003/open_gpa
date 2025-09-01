@@ -50,5 +50,16 @@ const server = app.listen(PORT, async () => {
         console.error("Failed to connect to the database:", err);
         process.exit(1); // Exit if the DB connection fails
     }
-})
+});
+
+// Handle server errors
+server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+        console.error(`Port ${PORT} is already in use`);
+        process.exit(1);
+    } else {
+        console.error("Server error:", err);
+        process.exit(1);
+    }
+});
 
