@@ -17,7 +17,15 @@ const app = express();
 const PORT = env.PORT;
 
 // Middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: env.isProduction
+            ? ["https//my-frontend-app.com"] // Allow only production frontend URL
+            : [env.FRONTEND_URL], // Allow localhost for development
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        // credentials: true, // If need to send cookies
+    })
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
