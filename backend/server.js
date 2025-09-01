@@ -14,7 +14,7 @@ const env = cleanEnv(process.env, {
 })
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
 // Middleware
 app.use(cors());
@@ -22,8 +22,14 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 
-app.listen(PORT, () => {
-    connectDB();
-    console.log("Server is running on http://localhost:" + PORT);
-});
+// Graceful shutdown
+const server = app.listen(PORT, async () => {
+    try {
+        await connectDB(); // Connect to DB before starting the server
+        console.log(`Server is running on http://localhost:${PORT}`);
+    } catch (err) {
+        console.error("Failed to connect to the database:", err);
+        process.exit(1); // Exit if the DB connection fails
+    }
+})
 
