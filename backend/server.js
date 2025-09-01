@@ -5,6 +5,7 @@ import { cleanEnv, port, str } from "envalid"; // for env validation
 
 import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./db/connectDB.js";
+import helmet from "helmet";
 
 // Load and validate environment variables
 dotenv.config();
@@ -17,6 +18,7 @@ const app = express();
 const PORT = env.PORT;
 
 // Middleware
+app.use(helmet()); // Set secure HTTP headers
 app.use(
     cors({
         origin: env.isProduction
