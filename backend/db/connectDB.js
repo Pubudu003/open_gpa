@@ -28,9 +28,27 @@ export const connectDB = async () => {
           console.warn(`Connection attempt failed, retrying... Error: ${err}`);
         }
       }
-    ); 
+    );
   } catch (error) {
     console.error(`Failed to connect to MongoDB: ${error.message}`, error.stack);
     throw new Error("Database connection failed"); // Throw new error here instead of process.exit
   }
+
+  // Set up connection event listeners
+  mongoose.connection.on("connected", () => {
+    console.log("MongoDB connection established");
+  });
+
+  mongoose.connection.on("disconnected", () => {
+    console.warn("MongoDB disconnected. Attempting to reconnect...");
+  });
+
+  mongoose.connection.on("error", (err) => {
+    console.error(`MongoDB connection error: error.message`, err.stack);
+  });
+
+  mongoose.connection.on("reconnected", () => {
+    console.log("MongoDB reconnected successfully");
+  });
+
 };
