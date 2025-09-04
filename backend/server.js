@@ -13,6 +13,16 @@ dotenv.config();
 const env = cleanEnv(process.env, {
   PORT: port({ default: 5000 }), // Validate PORT with default
   MONGO_URI: str(), // Validate MONGO_URI
+  JWT_SECRET: str(),
+  FRONTEND_URL: str(),
+  NODE_ENV: str({ choices: ["development", "production"] }),
+  SENDGRID_API_KEY: str({ default: "" }),
+  RATE_LIMIT_WINDOW_MS: num({ default: 15 * 60 * 1000 }), // 15 minutes
+  RATE_LIMIT_MAX: num({ default: 10 }),
+  //EMAIL_HOST: str({ default: "smtp.gmail.com" }),
+  //EMAIL_PORT: port({ default: 587 }),
+  //EMAIL_USER: str({ default: "" }),
+  //EMAIL_PASS: str({ default: "" }),
 });
 
 const app = express();
