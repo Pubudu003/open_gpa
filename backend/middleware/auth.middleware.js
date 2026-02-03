@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-export const courseRoute = async (req, res, next) => {
+export const protectedRoute = async (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
 
@@ -26,7 +26,7 @@ export const courseRoute = async (req, res, next) => {
       throw error;
     }
   } catch (error) {
-    console.log("Error in courseRoute middleware: ", error);
+    console.log("Error in protectedRoute middleware: ", error);
     res.status(401).json({ message: "Unauthorized - Invalid access token" });
   }
 }

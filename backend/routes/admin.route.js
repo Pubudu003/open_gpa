@@ -1,14 +1,14 @@
 import express from "express";
 
 import { getAllCourses, getCourse, addNewCourse, updateCourse, deleteCourse } from "../controllers/admin.controller.js";
-import { adminRoute, courseRoute } from "../middleware/auth.middleware.js";
+import { adminRoute, protectedRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/courses", courseRoute, adminRoute, getAllCourses);
-router.get("/courses/:id", courseRoute, adminRoute, getCourse);
-router.post("/courses", courseRoute, adminRoute, addNewCourse);
-router.put("/courses/:id", courseRoute, adminRoute, updateCourse);
-router.delete("/courses/:id", courseRoute, adminRoute, deleteCourse);
+router.get("/courses", protectedRoute, adminRoute, getAllCourses);
+router.get("/courses/:id", protectedRoute, adminRoute, getCourse);
+router.post("/courses", protectedRoute, adminRoute, addNewCourse);
+router.put("/courses/:id", protectedRoute, adminRoute, updateCourse);
+router.delete("/courses/:id", protectedRoute, adminRoute, deleteCourse);
 
 export default router;
