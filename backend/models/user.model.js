@@ -2,76 +2,85 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
-    // User's name, must be required
-    name: {
+  name:{
+    type: String,
+    required: [true, "Name is required"]
+  },
+  email:{
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password:{
+    type: String,
+    required: [true, "Password is required"],
+    trim: true,
+    minlength: [8, "Password must be at least 8 characters"],
+  },
+  degreeCode: {
+    type: String,
+    lowercase: true,
+    trim: true,
+  },
+  degreeName: {
+    type: String,
+    lowercase: true,
+    trim: true,
+  },
+  courses:[
+    {
+      courseId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course"
+      },
+      grade:{
         type: String,
-        required: [true, "Name is required"]
-    },
-    // User's email, must be unique and required
-    email: {
-        type: String,
-        required: [true, "Email is required"],
-        unique: true,
-        match: [
-            // regex to validate email
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            "Please enter a valid email",
-        ]
-    },
-    // User's password, must be required
-    password: {
-        type: String,
-        required: [true, "Please enter a password"],
-        minLength: [6, "Password must be at least 6 characters"],
-        select: false // to not return password in response
-    },
-    // User's role (e.g., student, admin), default is student
-    role: {
-        type: String,
-        enum: ["student", "admin"],
-        default: "student"
-    },
-    // Field to track if the user's email has been verified
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    // Field to store the user's batch year
-    batchYear: {
-        type: String,
-        enum: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "Other"],
-        default: "Other"
-    },
-    // Field for storing a verification token (e.g., for email verification)
-    verificationToken: String,
-    // Field for storing the expiry of the verification token
-    verificationTokenExpiry: Date,
-    // Field for storing the reset password token
-    resetPasswordToken: String,
-    // Field for storing the expiry of the reset password token
-    resetPasswordTokenExpiry: Date,
-},
-{
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
-});
-
-// Hash the password before saving the user
-userSchema.pre("save", async function (next) {
-    // Only hash if the password is modified or new
-    if (!this.isModified("password")) {
-        return next();
+        enum: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "E"]
+      },
+      gpv:{
+        type: Number,
+        enum: [4.00, 3.70, 3.30, 3.00, 2.70, 2.30, 2.00, 1.70, 1.30, 1.00, 0],
+        default: 0
+      }
     }
-    // Generate the salt
-    const salt = await bcrypt.genSalt(10);
-    // Hash the password
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
+  ],
+  gpa:{
+    type: Number,
+    default: 0
+  },
+  totalCredit:{
+    type: Number,
+    default: 0
+  },
+  role:{
+    type: String,
+    enum: ["student", "admin"],
+    default: "student"
+  }
+}, 
+{
+  timestamps: true
 });
 
-// Compare the password with the hashed password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
-};
+
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  } catch (error) {
+    throw error;
+  }
+})
+
+userSchema.methods.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+}
 
 const User = mongoose.model("User", userSchema);
+
 export default User;
+

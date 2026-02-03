@@ -1,68 +1,150 @@
+import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-import { sendVerificationEmail } from "../nodemailer/emails.js";
-import { VERIFICATION_EMAIL_TEMPLATE } from "../nodemailer/emailTemplates.js";
-import { generateVerificationCode } from "../utils/generateVerificationCode.js";
+import { redis } from "../lib/redis.js";
+
+const generateTokens = async (userId) => {
+  const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15m",
+  });
+
+  const refreshToken = jwt.sign({userId}, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return {accessToken, refreshToken};
+};
+
+const storeRefreshToken = async (userId, refreshToken) => {
+  await redis.set(`refresh_token:${userId}`, refreshToken, "EX", 7 * 24 * 60 * 60); // 7days
+}
+
+const setCookies = (res, accessToken, refreshToken) => {
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true, // prevent xss attacks
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 15 * 60 * 1000, // 15min
+  });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true, // prevent xss attacks
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7days
+  });
+}
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
-
   try {
     if (!name || !email || !password) {
-      throw new Error("All fields are required");
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const userAlreadyExists = await User.findOne({ email });
-    if (userAlreadyExists) {
-      throw new Error("User already exists");
+    const userExists = await User.findOne({ email });
+
+    if(userExists) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const verificationToken = generateVerificationCode();
+    const user = await User.create({ name, email, password });
 
-    const user = new User({
-      name,
-      email,
-      password,
-      verificationToken,
-      verificationTokenExpiry: Date.now() + 1000 * 60 * 60 * 24, // 24 hours
-    });
-    await user.save();
+    // authenticate
+    const {accessToken, refreshToken} = await generateTokens(user._id);
+    await storeRefreshToken(user._id, refreshToken);
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verifyemail/${verificationToken}`;
-
-    const message = VERIFICATION_EMAIL_TEMPLATE.replace(
-      "{verificationUrl}",
-      verificationUrl
-    );
-
-    try {
-      await sendVerificationEmail({
-        email: user.email,
-        subject: "Verify Your Email for GPA Calculator",
-        message,
-      });
-    } catch (sendEmailError) {
-      console.log("Error sending verification email:", sendEmailError);
-      user.verificationToken = undefined;
-      user.verificationTokenExpiry = undefined;
-      await user.save();
-      throw new Error("Error sending verification email");
-    }
+    setCookies(res, accessToken, refreshToken);
 
     res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      user: { ...user._doc },
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
     });
+
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    console.log("Error in signup controller", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-export const login = async (req, res) => {
-  res.send("login route called");
+
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ message: "Invalid email or Password" });
+    }
+
+    const { accessToken, refreshToken } = await generateTokens(user._id);
+
+    await storeRefreshToken(user._id, refreshToken);
+    setCookies(res, accessToken, refreshToken);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
+  } catch (error) {
+    console.log("Error in login controller: ", error);
+    res.status(500).json({ message: "Internal sever error" });
+  }
 };
+
 export const logout = async (req, res) => {
-  res.send("logout route called");
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      await redis.del(`refresh_token:${decoded.userId}`);
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ message: "Logged out successfully"});
+  } catch (error) {
+    console.log("Error in logout controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
+
+// this will refresh the access token
+export const refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token provided" });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const storedToken = await redis.get(`refresh_token:${decoded.userId}`);
+
+    if (storedToken !== refreshToken) {
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+
+    const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "15m"
+    });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000, // 15min
+    });
+
+    res.json({ message: "Token refreshed successfully" });
+  } catch (error) {
+    console.log("Error in refreshToken controller: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+// To do
+//export const getProfile = async (req, res) => {};
