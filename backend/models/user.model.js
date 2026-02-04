@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
-  name:{
+  userName:{
     type: String,
-    required: [true, "Name is required"]
+    required: [true, "User name is required"]
   },
   email:{
     type: String,
@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  totalCredit:{
+  totalCredits:{
     type: Number,
     default: 0
   },
