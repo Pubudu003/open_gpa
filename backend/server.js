@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
+import studentRoutes from "./routes/student.route.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-//app.use("api/student", studentRoutes);
+app.use("/api/student", studentRoutes);
 
 
 app.listen(5000, () => {
