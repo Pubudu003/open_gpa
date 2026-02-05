@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Course from "../models/course.model.js";
 import User from "../models/user.model.js";
 
@@ -89,6 +89,43 @@ export const selectCourse = async (req, res) => {
     return res.status(200).json({ 
       success: true,
       message: "Course selected successfully", 
+      user: updatedUser });
+    
+  } catch (error) {
+    console.error("Error in selectCourse(student.controller) controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deselectCourse = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid or missing course id" });
+    }
+
+    const courseExist = await User.findOne({ _id: userId, "courses.courseId": courseId });
+
+    if (!courseExist) {
+      return res.status(400).json({ message: "Course already removed" });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { courses: { courseId } } },
+      { new: true, runValidators: true }
+    )
+    .select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found, update failed" });
+    }
+
+    return res.status(200).json({ 
+      success: true,
+      message: "Course removed successfully", 
       user: updatedUser });
     
   } catch (error) {
