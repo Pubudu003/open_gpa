@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema({
-  courseId:{
+  courseCode:{
     type: String,
     required: [true, "Course ID is required"],
     unique: true,
@@ -12,7 +12,6 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: [true, "Course name is required"],
     unique: true,
-    lowercase: true,
     trim: true
   },
   courseCredit: {
@@ -29,49 +28,45 @@ const courseSchema = new mongoose.Schema({
   faculty: {
     type: String,
     required: [true, "Faculty is required"],
-    lowercase: true,
     trim: true
   },
   department: {
     type: String,
     required: [true, "Department is required"],
-    lowercase: true,
     trim: true
   },
   degreeCode: {
-    type: String,
-    required: [true, "Degree code is required"],
+    type: [String],
+    required: [true, "At least one degree code is required"],
     lowercase: true,
-    trim: true
+    trim: true,
+    default: []
   },
   degreeName: {
-    type: String,
-    required: [true, "Degree name is required"],
-    lowercase: true,
-    trim: true
+    type: [String],
+    required: [true, "At least one Degree name is required"],
+    trim: true,
+    default: []
   },
   degreeType: {
-    type: String,
-    enum: ["general", "special"],
-    default: "general",
-    required: [true, "Degree type is required"],
+    type: [String],
+    required: [true, "At least one Degree type is required"],
     lowercase: true,
-    trim: true
+    trim: true,
+    default: []
   },
-  year: {
+  level: {
     type: String,
-    enum: ["1st", "2nd", "3rd", "4th"],
-    default: "1st",
-    required: [true, "Year is required"],
-    lowercase: true,
+    enum: ["3", "4", "5", "6"],
+    default: "3",
+    required: [true, "level is required"],
     trim: true
   },
   semester: {
     type: String,
-    enum: ["1st", "2nd"],
-    default: "1st",
+    enum: ["1", "2"],
+    default: "1",
     required: [true, "Semester is required"],
-    lowercase: true,
     trim: true
   }
 })
