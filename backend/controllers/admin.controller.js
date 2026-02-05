@@ -32,7 +32,7 @@ export const getCourse = async (req, res) => {
 
 export const addNewCourse = async (req, res) => {
   const { 
-    courseId, 
+    courseCode, 
     courseName, 
     courseCredit, 
     courseDescription, 
@@ -41,23 +41,23 @@ export const addNewCourse = async (req, res) => {
     degreeCode,
     degreeName,
     degreeType,
-    year,
+    level,
     semester,   
   } = req.body;
   
   try {
-    if (!courseId || !courseName || !courseCredit || !faculty || !department || !degreeCode || !degreeName || !degreeType || !year || !semester) {
+    if (!courseCode || !courseName || !courseCredit || !faculty || !department || !degreeCode || !degreeName || !degreeType || !level || !semester) {
       return res.status(400).json({ message: "Some required fields are missing!" });
     }
 
-    const courseExists = await Course.findOne({ courseId });
+    const courseExists = await Course.findOne({ courseCode });
 
     if (courseExists) {
-      return res.status(400).json({ message: `Course already exists with id: ${courseId}` });
+      return res.status(400).json({ message: `Course already exists with id: ${courseCode}` });
     }
 
     const newCourse = await Course.create({
-      courseId, courseName, courseCredit, courseDescription, faculty, department, degreeCode, degreeName, degreeType, year, semester
+      courseCode, courseName, courseCredit, courseDescription, faculty, department, degreeCode, degreeName, degreeType, level, semester
     })
 
     res.status(201).json(newCourse);
@@ -70,7 +70,7 @@ export const addNewCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
   const { id } = req.params;
   const { 
-    courseId, 
+    courseCode, 
     courseName, 
     courseCredit, 
     courseDescription, 
@@ -79,7 +79,7 @@ export const updateCourse = async (req, res) => {
     degreeCode,
     degreeName,
     degreeType,
-    year,
+    level,
     semester,   
   } = req.body;
 
@@ -91,7 +91,7 @@ export const updateCourse = async (req, res) => {
     const updatedCourse = await Course.findOneAndUpdate(
       { _id : id }, 
       {
-        courseId, 
+        courseCode, 
         courseName, 
         courseCredit, 
         courseDescription, 
@@ -100,7 +100,7 @@ export const updateCourse = async (req, res) => {
         degreeCode,
         degreeName,
         degreeType,
-        year,
+        level,
         semester,   
       },
       { new: true, runValidators: true }

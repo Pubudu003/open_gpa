@@ -13,6 +13,6 @@ router.patch("/profile", protectedRoute, updateProfile);
 // Course routes
 router.get("/courses", protectedRoute, getAllCourses);
 router.get("/courses/:id", protectedRoute, getCourse);
-router.post("/courses/:id/select", protectedRoute, selectCourse);
+router.patch("/courses/:id/select", protectedRoute, selectCourse);
 
 export default router;
