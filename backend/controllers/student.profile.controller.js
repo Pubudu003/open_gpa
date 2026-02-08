@@ -2,9 +2,21 @@ import User from "../models/user.model.js";
 
 export const getProfile = async (req, res) => {
   try {
-   const { userName, email, degreeCode, degreeName, courses, gpa, totalCredits, role } = req.user;
+    const userId = req.user._id;
 
-   return res.status(200).json({ userName, email, degreeCode, degreeName, courses, gpa, totalCredits, role });
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate("courses.courseId");
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, userProfile: user });
+
+   //const { userName, email, degreeCode, degreeName, courses, gpa, totalCredits, role } = req.user;
+
+   //return res.status(200).json({ userName, email, degreeCode, degreeName, courses, gpa, totalCredits, role });
   } catch (error) {
     console.log("Error in getProfile(student.profile) controller", error);
     res.status(500).json({ message: "Internal server error" });

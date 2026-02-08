@@ -4,6 +4,7 @@ import { protectedRoute } from "../middleware/auth.middleware.js";
 import { deselectCourse, getAllCourses, getCourse, selectCourse } from "../controllers/student.course.controller.js";
 import { getProfile, updateProfile } from "../controllers/student.profile.controller.js";
 import { getAllCoursesInHand, getCourseInHand } from "../controllers/student.course.inhand.controller.js";
+import { updateGrade } from "../controllers/student.course.inhand.grade.controller.js";
 
 const router = express.Router();
 
@@ -17,8 +18,12 @@ router.get("/courses/:id", protectedRoute, getCourse);
 router.patch("/courses/:id/select", protectedRoute, selectCourse);
 router.delete("/courses/:id/deselect", protectedRoute, deselectCourse);
 
-// Selected course routes
+// Selected course in hand routes
 router.get("/courses-in-hand", protectedRoute, getAllCoursesInHand);
 router.get("/courses-in-hand/:id", protectedRoute, getCourseInHand);
+
+// Grade routes
+router.patch("/courses-in-hand/:id/grade", protectedRoute, updateGrade);
+//router.get("/courses-in-hand/grade", protectedRoute, getGrade);
 
 export default router;
