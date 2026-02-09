@@ -1,3 +1,21 @@
+import User from "../models/user.model.js";
+
 export const getGPA = async (req, res) => {
-  res.json({ message: "getGPA controller called" });
+  try {
+    const userId = req.user._id;
+
+    const userCurrentGPA = await User.findById(
+      userId
+    )
+    .select("gpa totalCredits");
+
+    if (!userCurrentGPA) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, gpa: userCurrentGPA });
+  } catch (error) {
+    console.log("Error in getGPA(student.controller) controller", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
