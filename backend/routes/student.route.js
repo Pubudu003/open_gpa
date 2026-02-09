@@ -5,6 +5,7 @@ import { deselectCourse, getAllCourses, getCourse, selectCourse } from "../contr
 import { getProfile, updateProfile } from "../controllers/student.profile.controller.js";
 import { getAllCoursesInHand, getCourseInHand } from "../controllers/student.course.inhand.controller.js";
 import { updateGrade } from "../controllers/student.course.inhand.grade.controller.js";
+import { getGPA } from "../controllers/student.gpa.controller.js";
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.get("/courses-in-hand/:id", protectedRoute, getCourseInHand);
 // Grade routes
 router.patch("/courses-in-hand/:id/grade", protectedRoute, updateGrade);
 //router.get("/courses-in-hand/grade", protectedRoute, getGrade);
+
+// GPA routes
+router.get("/gpa", protectedRoute, getGPA);
 
 export default router;
