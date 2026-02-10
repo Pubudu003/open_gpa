@@ -11,7 +11,7 @@ export const getAllCourses = async (req, res) => {
         ? "User not enrolled in any degree"
         : "Authentication required";
       
-      return res.status(req.user ? 400 : 4001).json({ message: errorMessage });
+      return res.status(req.user ? 400 : 401).json({ message: errorMessage });
     }
 
     const courses = await Course.find({ degreeCode });

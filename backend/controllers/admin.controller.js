@@ -27,6 +27,7 @@ export const getCourse = async (req, res) => {
     res.json(course);    
   } catch (error) {
     console.log("Error in getCourse controller", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

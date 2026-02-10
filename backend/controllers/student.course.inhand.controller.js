@@ -11,7 +11,6 @@ export const getAllCoursesInHand = async (req, res) => {
       return res.status(200).json([]);
     }
 
-    console.log(courses.courses[0].courseId.courseName);
     return res.status(200).json({ success: true, courses: courses });
 
   } catch (error) {
