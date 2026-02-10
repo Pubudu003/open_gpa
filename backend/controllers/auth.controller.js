@@ -84,7 +84,7 @@ export const signin = async (req, res) => {
 
     res.json({
       _id: user._id,
-      userName: user.name,
+      userName: user.userName,
       email: user.email,
       role: user.role,
     });
