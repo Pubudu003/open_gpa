@@ -19,16 +19,12 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: [8, "Password must be at least 8 characters"],
   },
-  degreeCode: {
-    type: String,
-    lowercase: true,
-    trim: true,
-  },
-  degreeName: {
-    type: String,
-    lowercase: true,
-    trim: true,
-  },
+  degree: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Degree"
+    }
+  ],
   courses:[
     {
       courseId:{
