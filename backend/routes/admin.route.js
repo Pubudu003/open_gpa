@@ -10,11 +10,16 @@ import {
   getDegree, 
   addNewDegree, 
   updateDegree, 
-  deleteDegree 
+  deleteDegree, 
+  getProfile
 } from "../controllers/admin.controller.js";
 import { adminRoute, protectedRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
+
+// Profile routes
+router.get("/profile", protectedRoute, adminRoute, getProfile);
+//router.patch("/profile", protectedRoute, adminRoute, updateProfile);
 
 // Course routes
 router.get("/courses", protectedRoute, adminRoute, getAllCourses);

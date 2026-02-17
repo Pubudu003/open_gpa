@@ -1,6 +1,53 @@
 import mongoose, { mongo } from "mongoose";
 import Course from "../models/course.model.js";
 import Degree from "../models/degree.model.js";
+import User from "../models/user.model.js";
+
+// Profile controllers
+export const getProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId)
+      .select("-password");
+
+    if (!user) {
+      return res.status(400).json({ 
+        success: false, 
+        errorCode: "USER_NOT_FOUND",
+        message: "User not found" 
+      });
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      userProfile: user,
+      message: "Profile fetched successfully." 
+    });
+
+  } catch (error) {
+    console.log("Error in getProfile controller", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
+  }
+}
+
+/*export const updateProfile = async (req, res) => {
+  try {
+    return res.status(200).json({ 
+      success: true, 
+      message: "Profile updated successfully." 
+    });
+  } catch (error) {
+    console.log("Error in updateProfile controller", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
+  }
+}*/
 
 // Course controllers
 export const getAllCourses = async (req, res) => {
