@@ -39,16 +39,13 @@ const courseSchema = new mongoose.Schema({
     required: [true, "Semester is required"],
     trim: true
   },
-  degree: [
-    {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Degree",
-    required: [true, "Degree is required"],
+  degree: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Degree" }],
+    required: [true, "At least one degree is required"],
   }
-]
 },
 {
-  timeseries: true
+  timestamps: true
 })
 
 const Course = mongoose.model("Course", courseSchema);

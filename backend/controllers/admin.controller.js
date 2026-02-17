@@ -1,140 +1,442 @@
+import mongoose, { mongo } from "mongoose";
 import Course from "../models/course.model.js";
+import Degree from "../models/degree.model.js";
 
+// Course controllers
 export const getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find({});
-    res.json(courses);
+    const courses = await Course.find({}).populate("degree");
+
+    if (courses.length === 0 ) {
+      return res.status(200).json({ 
+        success: true, 
+        degrees: [], 
+        message: "No courses have been created yet." });
+    }  
+
+    return res.status(200).json({ 
+      success: true, 
+      courses: courses,
+      message: "Courses fetched successfully." 
+    });
   } catch (error) {
     console.log("Error in getAllCourses controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" });
   }
 };
 
 export const getCourse = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res.status(400).json({ message: "Course id is not provided" });
-  }
-
   try {
-    const course = await Course.findOne({ _id : id });
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Unable to fetch course details right now" 
+      });
+    };
+
+    const course = await Course.findById(courseId).populate("degree");
 
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
+      return res.status(404).json({ 
+        success: false,
+        errorCode: "COURSE_NOT_FOUND",
+        message: "Course not found" 
+      });
+    };
 
-    res.json(course);    
+    return res.status(200).json({
+      success: true,
+      course: course,
+      message: "Course fetched successfully"
+    });    
+
   } catch (error) {
     console.log("Error in getCourse controller", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error" });
   }
 };
 
 export const addNewCourse = async (req, res) => {
-  const { 
-    courseCode, 
-    courseName, 
-    courseCredit, 
-    courseDescription, 
-    faculty, 
-    department,
-    degreeCode,
-    degreeName,
-    degreeType,
-    level,
-    semester,   
-  } = req.body;
-  
   try {
-    if (!courseCode || !courseName || !courseCredit || !faculty || !department || !degreeCode || !degreeName || !degreeType || !level || !semester) {
-      return res.status(400).json({ message: "Some required fields are missing!" });
+    const { 
+      courseCode, 
+      courseName, 
+      courseCredit, 
+      courseDescription, 
+      level,
+      semester,   
+      degree
+    } = req.body;
+
+    if (!courseCode || !courseName || !courseCredit || !courseDescription || !level || !semester || !degree) {
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "MISSING_SOME_FIELDS",
+        message: "Some required fields are missing!" });
     }
 
     const courseExists = await Course.findOne({ courseCode });
 
     if (courseExists) {
-      return res.status(400).json({ message: `Course already exists with id: ${courseCode}` });
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "COURSE_EXISTS",
+        message: `Course already exists with course code: ${courseCode}` 
+      });
     }
 
     const newCourse = await Course.create({
-      courseCode, courseName, courseCredit, courseDescription, faculty, department, degreeCode, degreeName, degreeType, level, semester
-    })
+      courseCode, 
+      courseName, 
+      courseCredit, 
+      courseDescription, 
+      level, 
+      semester,
+      degree
+    });
 
-    res.status(201).json(newCourse);
+    return res.status(201).json({
+      success: true,
+      course: newCourse,
+      message: "New course created successfully"
+    });
+
   } catch (error) {
     console.log("Error in addNewCourse controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ 
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error" 
+    });
   }
 };
 
 export const updateCourse = async (req, res) => {
-  const { id } = req.params;
-  const { 
-    courseCode, 
-    courseName, 
-    courseCredit, 
-    courseDescription, 
-    faculty, 
-    department,
-    degreeCode,
-    degreeName,
-    degreeType,
-    level,
-    semester,   
-  } = req.body;
-
-  if (!id) {
-    return res.status(400).json({ message: "Course id is not provided" });
-  }
-
   try {
-    const updatedCourse = await Course.findOneAndUpdate(
-      { _id : id }, 
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "MISSING_OR_INVALID_DEGREE_ID",
+        message: "Unable to update degree right now." 
+      });
+    };
+
+    const {
+      courseCode,
+      courseName,
+      courseCredit,
+      courseDescription,
+      level,
+      semester,
+      degree
+    } = req.body;
+
+    if (!courseCode || !courseName || !courseCredit || !courseDescription || !level || !semester || !degree) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_SOME_FIELDS",
+        message: "Some required fields are missing!"
+      });
+    }
+
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId, 
       {
         courseCode, 
         courseName, 
         courseCredit, 
         courseDescription, 
-        faculty, 
-        department,
-        degreeCode,
-        degreeName,
-        degreeType,
         level,
-        semester,   
+        semester,  
+        degree 
       },
       { new: true, runValidators: true }
-    );
+    ).populate("degree");;
 
     if (!updatedCourse) {
-      return res.status(404).json({ message: "Course not found" });
-    }
+      return res.status(404).json({ 
+        success: false,
+        errorCode: "COURSE_NOT_EXISTS",
+        message: "Course not found" 
+      });
+    };
 
-    res.json(updatedCourse);
+    return res.status(200).json({
+      success: true,
+      updatedCourse: updatedCourse,
+      message: "Course has been updated successfully."
+    });
+
   } catch (error) {
     console.log("Error in updateCourse controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error" 
+    });
   }
 };
 
 export const deleteCourse = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res.status(400).json({ message: "Course Id is not provided"});
-  }
-
   try {
-    const course = await Course.findOneAndDelete({ _id : id });
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Unable to delete course right now."
+      });
+    };
+
+    const course = await Course.findByIdAndDelete(courseId);
 
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
+      return res.status(404).json({ 
+        success: false,
+        errorCode: "COURSE_NOT_EXISTS",
+        message: "Course not exists" 
+      });
+    };
 
-    res.json({ course, message: "Course deleted successfully" });
+    return res.status(200).json({ 
+      success: true,
+      message: "Course deleted successfully" 
+    });
+
   } catch (error) {
     console.log("Error in deleteCourse controller ", error);
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ 
+      success: false,
+      errorCode: "CONTROLLER ERROR",
+      message: "Internal server error" 
+    });
+  }
+};
+
+// Degree controllers
+
+export const getAllDegrees = async (req, res) => {
+  try {
+    const degrees = await Degree.find({});
+
+    if (degrees.length === 0 ) {
+      return res.status(200).json({ 
+        success: true, 
+        degrees: [], 
+        message: "No degrees have been created yet." 
+      });
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      degrees: degrees, 
+      message: "Degrees fetched successfully." 
+    });
+  } catch (error) {
+    console.log("Error in getAllDegrees controller", error);
+    return res.status(500).json({ 
+      success: false, 
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error" });
+  }
+};
+
+export const getDegree = async (req, res) => {
+  try {
+    const degreeId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(degreeId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_DEGREE_ID",
+        message: "Unable to fetch degree details right now."
+      });
+    }
+
+    const degree = await Degree.findById(degreeId);
+
+    if (!degree) {
+      return res.status(404).json({
+        success: false,
+        errorCode: "DEGREE_NOT_FOUND",
+        message: "Degree not found."
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      degree: degree,
+      message: "Degree fetched successfully."
+    });
+    
+  } catch (error) {
+    console.log("Error in getDegree controller", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error."
+    });
+  }
+};
+
+export const addNewDegree = async (req, res) => {
+  try {
+    const { 
+      degreeCode, 
+      degreeName, 
+      degreeType, 
+      faculty, 
+      department 
+    } = req.body;
+
+    if (!degreeCode || !degreeName || !degreeType || !faculty || !department) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_SOME_FIELDS",
+        message: "Some required fields are missing!"
+      })
+    };
+    
+    const degreeExists = await Degree.findOne({degreeCode});
+
+    if (degreeExists) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "DEGREE_EXISTS",
+        message: `Degree already exists with id: ${degreeCode}`
+      });
+    }
+
+    const newDegree = await Degree.create({
+      degreeCode,
+      degreeName,
+      degreeType,
+      faculty,
+      department
+    });
+
+    return res.status(200).json({
+      success: true,
+      newDegree: newDegree,
+      message: "New degree created successfully."
+    });
+
+  } catch (error) {
+    console.log("Error in addNewDegree controller", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error"
+    });
+  }
+};
+
+export const updateDegree = async (req, res) => {
+  try {
+    const degreeId = req.params.id;
+    const { 
+      degreeCode, 
+      degreeName, 
+      degreeType, 
+      faculty, 
+      department 
+    } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(degreeId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_DEGREE_ID",
+        message: "Unable to update degree right now."
+      });
+    };
+
+    if (!degreeCode || !degreeName || !degreeType || !faculty || !department) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_SOME_FIELDS",
+        message: "Some fields are missing!"
+      })
+    };
+
+    const updatedDegree = await Degree.findByIdAndUpdate(
+      degreeId,
+      {
+        degreeCode,
+        degreeName,
+        degreeType,
+        faculty,
+        department
+      },
+      { new: true, runValidators: true}
+    );
+
+    if (!updatedDegree) {
+      return res.status(404).json({
+        success: false,
+        errorCode:  "DEGREE_NOT_EXIST",
+        message: "Something went wrong, the degree you trying to update is not exists."
+      });
+    };
+
+    return res.status(200).json({
+      success: true,
+      updatedDegree: updatedDegree,
+      message: "Degree has been updated successfully"
+    });
+
+  } catch (error) {
+    console.log("Error in updateDegree controller: ", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error"
+    });
+  }
+};
+export const deleteDegree = async (req, res) => {
+  try {
+    const degreeId = req.params.id;
+
+    if (!degreeId) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_DEGREE_ID",
+        message: "Unable to delete degree right now."
+      });
+    };
+
+    const degree = await Degree.findByIdAndDelete(degreeId);
+
+    if (!degree) {
+      return res.status(404).json({
+        success: false,
+        errorCode: "DEGREE_NOT_EXISTS",
+        message: "degree not exists"
+      });
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "degree deleted successfully."
+    });   
+
+  } catch (error) {
+    console.log("Error in deleteDegree controller.", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error."
+    });
   }
 };

@@ -34,8 +34,9 @@ const setCookies = (res, accessToken, refreshToken) => {
 }
 
 export const signup = async (req, res) => {
-  const { userName, email, password } = req.body;
   try {
+    const { userName, email, password } = req.body;
+
     if (!userName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }

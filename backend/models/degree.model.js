@@ -2,24 +2,22 @@ import mongoose from "mongoose";
 
 const degreeSchema = new mongoose.Schema({
   degreeCode: {
-    type: [String],
-    required: [true, "At least one degree code is required"],
+    type: String,
+    required: [true, "Degree code is required"],
+    unique: true,
     lowercase: true,
-    trim: true,
-    default: []
+    trim: true
   },
   degreeName: {
-    type: [String],
-    required: [true, "At least one Degree name is required"],
+    type: String,
+    required: [true, "Degree name is required"],
     trim: true,
-    default: []
   },
   degreeType: {
-    type: [String],
-    required: [true, "At least one Degree type is required"],
+    type: String,
+    required: [true, "Degree type is required"],
     lowercase: true,
-    trim: true,
-    default: []
+    trim: true
   },
   faculty: {
     type: String,
