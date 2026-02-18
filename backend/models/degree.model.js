@@ -31,7 +31,7 @@ const degreeSchema = new mongoose.Schema({
   },
 },
 {
-  timeseries: true
+  timestamps: true
 });
 
 const Degree = mongoose.model("Degree", degreeSchema);
