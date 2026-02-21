@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
       },
       grade:{
         type: String,
-        enum: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "E"]
+        enum: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "E"],
       },
       gpv:{
         type: Number,
@@ -57,6 +57,8 @@ const userSchema = new mongoose.Schema({
 {
   timestamps: true
 });
+
+userSchema.index({ _id: 1, "courses.course": 1 }, { unique: true });
 
 
 userSchema.pre("save", async function () {
