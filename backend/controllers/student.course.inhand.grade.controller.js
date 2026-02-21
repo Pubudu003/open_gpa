@@ -32,7 +32,7 @@ const calculateGeneralGPA = (courses) => {
   let totalCreditWeightedGPV = 0.00;
 
   for (const course of courses) {
-    const courseCredit = course.courseId.courseCredit;
+    const courseCredit = course.course.courseCredit;
     const courseGPV = course.gpv;
     const creditWeightedGPV = courseCredit * courseGPV;
 
@@ -63,13 +63,13 @@ const calculateSpecialGPA = (courses) => {
 
 
   for (const course of courses) {
-    const courseCredit = course.courseId.courseCredit;
+    const courseCredit = course.course.courseCredit;
     const courseGPV = course.gpv;
 
-    const creditWeightedGPV = course.courseId.level === "3" || course.courseId.level === "4" ? 
+    const creditWeightedGPV = course.course.level === "3" || course.course.level === "4" ? 
       courseCredit * courseGPV * 2 :
       courseCredit * courseGPV * 3;
-    const weightedCourseCredit = courseCredit * (course.courseId.level === "3" || course.courseId.level === "4" ? 2 : 3);
+    const weightedCourseCredit = courseCredit * (course.course.level === "3" || course.course.level === "4" ? 2 : 3);
 
 
     if (courseGPV === 0) {
@@ -96,11 +96,19 @@ export const updateGrade = async (req, res) => {
     const grade = req.body.grade;
 
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ message: "Invalid or missing course id" });
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Something went wrong, cannot update grade" 
+      });
     }
 
     if (!grade) {
-      return res.status(400).json({ message: "Something went wrong, grade not provided" });
+      return res.status(400).json({ 
+        success: false,
+        errorCode: "GRADE_NOT_PROVIDED",
+        message: "Something went wrong, cannot update grade" 
+      });
     }
 
     const gpv = getGPV(grade);
@@ -116,17 +124,21 @@ export const updateGrade = async (req, res) => {
       { 
         new: true, 
         runValidators: true,
-        arrayFilters: [{ "course.courseId": courseId  }] }
+        arrayFilters: [{ "course.course": courseId  }] }
     )
     .select("-password")
-    .populate("courses.courseId");
+    .populate("courses.course");
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found, update failed" });
+      return res.status(404).json({ 
+        success: false,
+        errorCode: "USER_NOT_FOUND",
+        message: "User not found, update failed" 
+      });
     }
 
     // calculate the current gpa and total credits
-    const gpaResults = updatedUser.degreeCode === "bsc_it" ? 
+    const gpaResults = updatedUser.degree.degreeType === "General" ? 
       calculateGeneralGPA(updatedUser.courses) :
       calculateSpecialGPA(updatedUser.courses);
     
@@ -137,16 +149,29 @@ export const updateGrade = async (req, res) => {
       { new: true, runValidators: true }
     )
     .select("-password")
-    .populate("courses.courseId");
+    .populate("courses.course");
 
     if (!finalUser) {
-      return res.status(404).json({ message: "User gpa and total credit update failed" });
+      return res.status(404).json({ 
+        success: false,
+        errorCode: "USER_NOT_FOUND",
+        message: "User gpa and total credit update failed" 
+      });
     }
     
-    return res.status(200).json({ success: true, updatedUser: finalUser });
+    return res.status(200).json({ 
+      success: true, 
+      updatedUser: finalUser,
+      message: "Grade updated successfully."
+    });
+
   } catch (error) {
     console.log("Error in updateGrade(student.course.inhand.grade) controller", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error" 
+    });
   }
 }
 
