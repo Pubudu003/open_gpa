@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { GraduationCap, Pencil, Plus, Search, Trash, X } from "lucide-react";
+import { GraduationCap, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 import { FILTER_SELECT_CLS } from "./constants";
+import Modal from "../ui/Modal";
+import DegreeForm from "./DegreeForm";
+import DeleteConfirm from "./DeleteConfirm";
 
 const DegreesTab = () => {
   const [degrees, setDegrees] = useState([]);
@@ -70,6 +73,48 @@ const DegreesTab = () => {
     setFilterType("");
     setFilterFaculty("");
     setFilterDepartment("");
+  };
+
+  const handleAdd = async (data) => {
+    setSaving(true);
+    try {
+      await axiosInstance.post("/admin/degrees", data);
+      toast.success("Degree added!");
+      setModal(null);
+      fetchDegrees();
+    } catch (e) {
+      toast.error(e.response?.data?.message || "Failed to add degree");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEdit = async (data) => {
+    setSaving(true);
+    try {
+      await axiosInstance.put(`/admin/degrees/${modal.edit._id}`, data);
+      toast.success("Degree updated!");
+      setModal(null);
+      fetchDegrees();
+    } catch (e) {
+      toast.error(e.response?.data?.message || "Failed to update degree");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setSaving(true);
+    try {
+      await axiosInstance.delete(`/admin/degrees/${modal.delete._id}`);
+      toast.success("Degree Deleted!");
+      setModal(null);
+      fetchDegrees();
+    } catch (e) {
+      toast.error(e.response?.data?.message || "Failed to delete degree");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -231,7 +276,15 @@ const DegreesTab = () => {
                   </td>
                   <td className="px-4 py-3.5">
                     <span
-                      className={`${d.degreeType?.toLowerCase() === "special" ? "bg-violet-500/15 text-violet-400" : "bg-sky-500/15 text-sky-400"} rounded-full px-2.5 py-1 text-xs font-medium`}
+                      className={`${
+                        d.degreeType?.toLowerCase() === "special"
+                          ? "bg-violet-500/15 text-violet-400"
+                          : d.degreeType?.toLowerCase() === "general"
+                            ? "bg-sky-500/15 text-sky-400"
+                            : d.degreeType?.toLowerCase() === "masters"
+                              ? "bg-teal-500/15 text-teal-400"
+                              : "bg-gray-500/15 text-gray-400"
+                      } rounded-full px-2.5 py-1 text-xs font-medium`}
                     >
                       {d.degreeType}
                     </span>
@@ -240,11 +293,17 @@ const DegreesTab = () => {
                   <td className="px-4 py-3.5 text-gray-300">{d.department}</td>
                   <td className="px-4 py-3.5">
                     <div className="flex items-center justify-end gap-2">
-                      <button>
+                      <button
+                        onClick={() => setModal({ edit: d })}
+                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-sky-400/10 hover:text-sky-400"
+                      >
                         <Pencil size={15} />
                       </button>
-                      <button>
-                        <Trash size={15} />
+                      <button
+                        onClick={() => setModal({ delete: d })}
+                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-400/10 hover:text-red-400"
+                      >
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </td>
@@ -254,6 +313,51 @@ const DegreesTab = () => {
           </table>
         </div>
       )}
+
+      {/* Add Modal */}
+      <Modal
+        isOpen={modal === "add"}
+        onClose={() => setModal(null)}
+        title="Add New Degree"
+      >
+        <DegreeForm onSubmit={handleAdd} isLoading={saving} />
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        isOpen={!!modal?.edit}
+        onClose={() => setModal(null)}
+        title="Edit Degree"
+      >
+        {modal?.edit && (
+          <DegreeForm
+            initial={{
+              degreeCode: modal.edit.degreeCode,
+              degreeName: modal.edit.degreeName,
+              degreeType: modal.edit.degreeType,
+              faculty: modal.edit.faculty,
+              department: modal.edit.department,
+            }}
+            onSubmit={handleEdit}
+            isLoading={saving}
+          />
+        )}
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={!!modal?.delete}
+        onClose={() => setModal(null)}
+        title="Confirm Delete"
+      >
+        {modal?.delete && (
+          <DeleteConfirm
+            label={modal.delete.degreeName}
+            onCancel={() => setModal(null)}
+            onConfirm={handleDelete}
+          />
+        )}
+      </Modal>
     </div>
   );
 };
