@@ -27,7 +27,7 @@ const DegreesTab = () => {
       const res = await axiosInstance.get("/admin/degrees");
       setDegrees(res.data.degrees || []);
       if (res.data.degrees.length === 0) {
-        toast.success("No degrees have been created yet.");
+        toast.error("No degrees have been created yet.");
       }
     } catch {
       toast.error("Failed to fetch degrees.");
