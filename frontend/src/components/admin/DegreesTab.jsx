@@ -104,7 +104,6 @@ const DegreesTab = () => {
   };
 
   const handleDelete = async () => {
-    setSaving(true);
     try {
       await axiosInstance.delete(`/admin/degrees/${modal.delete._id}`);
       toast.success("Degree Deleted!");
@@ -112,8 +111,6 @@ const DegreesTab = () => {
       fetchDegrees();
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to delete degree");
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -352,7 +349,7 @@ const DegreesTab = () => {
       >
         {modal?.delete && (
           <DeleteConfirm
-            label={modal.delete.degreeName}
+            label={`${modal.delete.degreeCode.toUpperCase()} - ${modal.delete.degreeName}`}
             onCancel={() => setModal(null)}
             onConfirm={handleDelete}
           />
