@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Course from "../models/course.model.js";
 import Degree from "../models/degree.model.js";
 import User from "../models/user.model.js";

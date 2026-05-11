@@ -1,17 +1,32 @@
 import express from "express";
 
 import { protectedRoute } from "../middleware/auth.middleware.js";
-import { deselectCourse, getAllCourses, getCourse, selectCourse } from "../controllers/student.course.controller.js";
-import { getProfile, updateProfile } from "../controllers/student.profile.controller.js";
-import { getAllCoursesInHand, getCourseInHand } from "../controllers/student.course.inhand.controller.js";
+import {
+  deselectCourse,
+  getAllCourses,
+  getCourse,
+  selectCourse,
+} from "../controllers/student.course.controller.js";
+import {
+  getProfile,
+  updateProfile,
+} from "../controllers/student.profile.controller.js";
+import {
+  getAllCoursesInHand,
+  getCourseInHand,
+} from "../controllers/student.course.inhand.controller.js";
 import { updateGrade } from "../controllers/student.course.inhand.grade.controller.js";
 import { getGPA } from "../controllers/student.gpa.controller.js";
+import { getAllDegrees } from "../controllers/student.degree.controller.js";
 
 const router = express.Router();
 
 // Profile routes
 router.get("/profile", protectedRoute, getProfile);
 router.patch("/profile", protectedRoute, updateProfile);
+
+// Degree routes
+router.get("/degrees", protectedRoute, getAllDegrees);
 
 // Course routes
 router.get("/courses", protectedRoute, getAllCourses);
