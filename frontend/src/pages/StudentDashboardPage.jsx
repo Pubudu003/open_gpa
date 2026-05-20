@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 
 import { useAuthStore } from "../stores/useAuthStore";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 import DegreeChangingWarning from "../components/student/DegreeChangingWarning";
 import ProfileSection from "../components/student/ProfileSection";
 import BrowseCourseSection from "../components/student/BrowseCourseSection";
+import MyCoursesSection from "../components/student/MyCoursesSection";
 
 const NAV_ITEMS = [
   { id: "profile", label: "My Profile", icon: User },
@@ -55,6 +56,10 @@ const StudentDashboardPage = () => {
     setSelectedCourseIds((prev) =>
       prev.includes(courseId) ? prev : [...prev, courseId],
     );
+  }, []);
+
+  const handleCourseRemoved = useCallback((courseId) => {
+    setSelectedCourseIds((prev) => prev.filter((id) => id !== courseId));
   }, []);
 
   const refreshProfile = useCallback(() => {
@@ -167,7 +172,11 @@ const StudentDashboardPage = () => {
                 />
               </div>
             )}
-            {activeTab === "mycourses" && <div>My Course content</div>}
+            {activeTab === "mycourses" && (
+              <div>
+                <MyCoursesSection onCourseRemoved={handleCourseRemoved} />
+              </div>
+            )}
             {activeTab === "about" && <div>About content</div>}
             {activeTab === "contact" && <div>Contact content</div>}
           </Motion.div>
