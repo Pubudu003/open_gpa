@@ -53,7 +53,7 @@ export const calculateGeneralGPA = (courses) => {
   const gpa = totalCreditWeightedGPV / totalCredits;
   const gpaFormatted = parseFloat(gpa.toFixed(2));
 
-  return { gpaFormatted, totalCredits };
+  return { gpa: gpaFormatted, totalCredits };
 };
 
 // Calculate current gpa and total credits in Special degree
@@ -90,5 +90,5 @@ export const calculateSpecialGPA = (courses) => {
   const gpa = totalCreditWeightedGPV / cumulativeWeightedCredit;
   const gpaFormatted = parseFloat(gpa.toFixed(2));
 
-  return { gpaFormatted, totalCredits };
+  return { gpa: gpaFormatted, totalCredits };
 };
