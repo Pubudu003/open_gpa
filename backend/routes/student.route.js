@@ -15,7 +15,11 @@ import {
   getAllCoursesInHand,
   getCourseInHand,
 } from "../controllers/student.course.inhand.controller.js";
-import { updateGrade } from "../controllers/student.course.inhand.grade.controller.js";
+import {
+  updateGrade,
+  updateGrade_test,
+  updateGrade_optimized,
+} from "../controllers/student.course.inhand.grade.controller.js";
 import { getGPA } from "../controllers/student.gpa.controller.js";
 import { getAllDegrees } from "../controllers/student.degree.controller.js";
 
@@ -39,7 +43,11 @@ router.get("/courses-in-hand", protectedRoute, getAllCoursesInHand);
 router.get("/courses-in-hand/:id", protectedRoute, getCourseInHand);
 
 // Grade routes
-router.patch("/courses-in-hand/:id/grade", protectedRoute, updateGrade);
+router.patch(
+  "/courses-in-hand/:id/grade",
+  protectedRoute,
+  updateGrade_optimized,
+);
 //router.get("/courses-in-hand/grade", protectedRoute, getGrade);
 
 // GPA routes
