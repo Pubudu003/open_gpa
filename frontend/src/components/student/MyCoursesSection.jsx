@@ -18,8 +18,8 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
   const [updatingGrade, setUpdatingGrade] = useState(null);
   const [removing, setRemoving] = useState(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [ihRes, gpaRes] = await Promise.all([
         axiosInstance.get("/student/courses-in-hand"),
@@ -44,7 +44,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
       await axiosInstance.patch(`/student/courses-in-hand/${courseId}/grade`, {
         grade,
       });
-      await fetchData();
+      await fetchData(true);
       toast.success("Grade updated!");
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to update grade");
@@ -57,7 +57,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
     setRemoving(courseId);
     try {
       await axiosInstance.delete(`/student/courses/${courseId}/deselect`);
-      await fetchData();
+      await fetchData(true);
       toast.success("Course removed!");
       onCourseRemoved(courseId);
     } catch (e) {
