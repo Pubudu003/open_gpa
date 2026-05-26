@@ -100,7 +100,9 @@ export const signin = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate(
+      "degree courses.course",
+    );
 
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
@@ -110,6 +112,9 @@ export const signin = async (req, res) => {
       });
     }
 
+    const finalUser = user.toObject();
+    delete finalUser.password;
+
     const { accessToken, refreshToken } = await generateTokens(user._id);
 
     await storeRefreshToken(user._id, refreshToken);
@@ -117,12 +122,7 @@ export const signin = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      user: {
-        _id: user._id,
-        userName: user.userName,
-        email: user.email,
-        role: user.role,
-      },
+      user: finalUser,
       message: "You have successfully signed in",
     });
   } catch (error) {

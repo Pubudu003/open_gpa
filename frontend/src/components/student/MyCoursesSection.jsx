@@ -86,13 +86,13 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
   return (
     <div className="space-y-6">
       <div
-        className={`relative overflow-hidden bg-linear-to-br ${gpaGradient} rounded-2xl p-6`}
+        className={`relative overflow-hidden bg-linear-to-br ${gpaGradient} rounded-2xl p-6 transition-colors duration-300`}
       >
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-white/70">Current GPA</p>
-            <p className="mt-1 text-5xl font-bold text-white">
+            <p className="mt-1 text-5xl font-bold text-white transition-all duration-300">
               {gpaData.gpa.toFixed(2)}
             </p>
             <p className="mt-2 text-sm text-white/60">
@@ -184,7 +184,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                       <span className="text-xs text-gray-500">
                         GPV:{" "}
                         <span
-                          className={`font-semibold ${gradeColor(item.grade)}`}
+                          className={`font-semibold ${gradeColor(item.grade)} transition-all`}
                         >
                           {GPV_MAP[item.grade]?.toFixed(2)}
                         </span>
