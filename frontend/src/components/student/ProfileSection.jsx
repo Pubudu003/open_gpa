@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
@@ -28,6 +28,28 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   const [saving, setSaving] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
+  // temporary fix for issue where the gpa details are not refreshed after course grade change.
+  const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
+
+  const fetchGpaData = useCallback(async () => {
+    try {
+      const gpaRes = await axiosInstance.get("/student/gpa");
+      setGpaData(gpaRes.data.userGPA || { gpa: 0, totalCredits: 0 });
+    } catch {
+      if (!user?.degree?._id) {
+        toast.error("You have not selected a degree!");
+      } else {
+        toast.error("Failed to load GPA. Please try again.");
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchGpaData();
+  }, [fetchGpaData]);
+
+  //=========================================================================
+
   useEffect(() => {
     const fetchDegrees = async () => {
       setLoading(true);
@@ -44,18 +66,18 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
       }
     };
     fetchDegrees();
-  }, []);
+  }, [user]);
 
   const GPA_CARD_VALUES = [
     {
       label: "GPA",
-      value: (user?.gpa ?? 0).toFixed(2),
+      value: gpaData.gpa.toFixed(2),
       icon: TrendingUp,
       color: "text-emerald-400",
     },
     {
       label: "Total Credits",
-      value: user?.totalCredits ?? 0,
+      value: gpaData.totalCredits,
       icon: Award,
       color: "text-sky-400",
     },
