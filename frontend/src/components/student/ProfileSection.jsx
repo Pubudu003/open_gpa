@@ -28,6 +28,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   const [saving, setSaving] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
+  /*
   // temporary fix for issue where the gpa details are not refreshed after course grade change.
   const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
 
@@ -49,6 +50,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   }, [fetchGpaData]);
 
   //=========================================================================
+  */
 
   useEffect(() => {
     const fetchDegrees = async () => {
@@ -71,13 +73,13 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   const GPA_CARD_VALUES = [
     {
       label: "GPA",
-      value: gpaData.gpa.toFixed(2),
+      value: user.gpa.toFixed(2),
       icon: TrendingUp,
       color: "text-emerald-400",
     },
     {
       label: "Total Credits",
-      value: gpaData.totalCredits,
+      value: user.totalCredits,
       icon: Award,
       color: "text-sky-400",
     },

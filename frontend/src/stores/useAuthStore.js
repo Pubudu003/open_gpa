@@ -88,4 +88,7 @@ export const useAuthStore = create((set) => ({
       set({ checkingAuth: false });
     }
   },
+
+  // --- User State ---
+  setUser: (user) => set({ user }),
 }));

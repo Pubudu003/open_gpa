@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { useAuthStore } from "../stores/useAuthStore";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
@@ -21,6 +21,7 @@ import DegreeChangingWarning from "../components/student/DegreeChangingWarning";
 import ProfileSection from "../components/student/ProfileSection";
 import BrowseCourseSection from "../components/student/BrowseCourseSection";
 import MyCoursesSection from "../components/student/MyCoursesSection";
+import axiosInstance from "../lib/axios";
 
 const NAV_ITEMS = [
   { id: "profile", label: "My Profile", icon: User },
@@ -31,20 +32,34 @@ const NAV_ITEMS = [
 ];
 
 const StudentDashboardPage = () => {
-  const { user, logout, getProfile } = useAuthStore();
+  const { user, logout, getProfile, setUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState("profile");
-
-  /* const [selectedCourseIds, setSelectedCourseIds] = useState(
-    () => user?.courses?.map((c) => c.course?._id || c.course) || [],
-  );*/
-
-  /*useEffect(() => {
-    const ids = user?.courses?.map((c) => c.course?._id || c.course) || [];
-    setSelectedCourseIds(ids);
-  }, [user?.courses]);*/
 
   const [selectedCourseIds, setSelectedCourseIds] = useState([]);
   const [prevCourses, setPrevCourses] = useState(null);
+
+  // temporary fix for issue where the gpa details are not refreshed after course grade change.
+  /* const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
+
+  const fetchGpaData = useCallback(async () => {
+    try {
+      const gpaRes = await axiosInstance.get("/student/gpa");
+      setGpaData((prevGpaData) => ({
+        ...prevGpaData,
+        gpa: gpaRes.data.userGPA?.gpa || 0,
+        totalCredits: gpaRes.data.userGPA?.totalCredits || 0,
+      }));
+    } catch {
+      setGpaData({ gpa: 0, totalCredits: 0 });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchGpaData();
+  }, [fetchGpaData]);
+
+  //==================================================================
+  */
 
   if (user?.courses !== prevCourses) {
     setPrevCourses(user?.courses);
@@ -84,7 +99,7 @@ const StudentDashboardPage = () => {
         </div>
 
         {/* GPA */}
-        {user?.gpa != null && (
+        {user.gpa != null && (
           <div className="mx-4 mt-4 rounded-xl border border-sky-500/20 bg-linear-to-br from-sky-600/20 to-violet-600/20 px-4 py-3">
             <p className="mb-0.5 text-xs text-gray-400">Your GPA</p>
             <p className="text-2xl font-bold text-white">
