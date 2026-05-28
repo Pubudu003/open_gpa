@@ -10,14 +10,17 @@ import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
 import { GRADES, GPV_MAP, gradeColor } from "./constants";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 const MyCoursesSection = ({ onCourseRemoved }) => {
-  const [coursesInHand, setCoursesInHand] = useState([]);
-  const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
-  const [loading, setLoading] = useState(true);
+  const { user, setUser, getProfile } = useAuthStore();
+  // const [coursesInHand, setCoursesInHand] = useState([]);
+  // const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
+  const [loading, setLoading] = useState(false);
   const [updatingGrade, setUpdatingGrade] = useState(null);
   const [removing, setRemoving] = useState(null);
 
+  /*
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
@@ -37,14 +40,18 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+  */
 
   const handleGradeChange = async (courseId, grade) => {
     setUpdatingGrade(courseId);
     try {
-      await axiosInstance.patch(`/student/courses-in-hand/${courseId}/grade`, {
-        grade,
-      });
-      await fetchData(true);
+      const res = await axiosInstance.patch(
+        `/student/courses-in-hand/${courseId}/grade`,
+        {
+          grade,
+        },
+      );
+      setUser(res.data.updatedUser);
       toast.success("Grade updated!");
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to update grade");
@@ -57,7 +64,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
     setRemoving(courseId);
     try {
       await axiosInstance.delete(`/student/courses/${courseId}/deselect`);
-      await fetchData(true);
+      // await fetchData(true);
       toast.success("Course removed!");
       onCourseRemoved(courseId);
     } catch (e) {
@@ -75,11 +82,11 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
     );
 
   const gpaGradient =
-    gpaData.gpa >= 3.7
+    user.gpa >= 3.7
       ? "from-emerald-600 to-teal-600"
-      : gpaData.gpa >= 3.0
+      : user.gpa >= 3.0
         ? "from-sky-600 to-blue-600"
-        : gpaData.gpa >= 2.0
+        : user.gpa >= 2.0
           ? "from-yellow-600 to-orange-600"
           : "from-red-600 to-rose-600";
 
@@ -93,10 +100,10 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
           <div>
             <p className="text-sm font-medium text-white/70">Current GPA</p>
             <p className="mt-1 text-5xl font-bold text-white transition-all duration-300">
-              {gpaData.gpa.toFixed(2)}
+              {user.gpa.toFixed(2)}
             </p>
             <p className="mt-2 text-sm text-white/60">
-              {gpaData.totalCredits ?? 0} total credit hours
+              {user.totalCredits ?? 0} total credit hours
             </p>
           </div>
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
@@ -107,7 +114,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
         <div className="absolute -top-4 -left-4 h-24 w-24 rounded-full bg-white/5" />
       </div>
 
-      {coursesInHand.length === 0 ? (
+      {user.courses.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-700 bg-gray-900 py-16 text-center">
           <BookMarked size={40} className="mb-3 text-gray-600" />
           <p className="font-medium text-gray-400">No courses selected</p>
@@ -119,11 +126,11 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
         <div className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-900">
           <div className="border-b border-gray-700 px-5 py-4">
             <h3 className="font-semibold text-white">
-              Selected Courses ({coursesInHand.length})
+              Selected Courses ({user.courses.length})
             </h3>
           </div>
           <div className="divide-y divide-gray-700/50">
-            {coursesInHand.map((item) => {
+            {user.courses.map((item) => {
               const course = item.course;
               if (!course) return null;
               return (
