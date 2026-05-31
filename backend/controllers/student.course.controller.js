@@ -212,7 +212,8 @@ export const deselectCourse = async (req, res) => {
       { new: true, runValidators: true },
     )
       .select("-password")
-      .populate("courses.course");
+      .populate("courses.course")
+      .populate("degree");
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -232,6 +233,87 @@ export const deselectCourse = async (req, res) => {
       "Error in selectCourse(student.controller) controller",
       error,
     );
+    res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error",
+    });
+  }
+};
+
+export const deselectCourse_modified = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Invalid or missing course id",
+      });
+    }
+
+    const user = await User.findById(userId)
+      .select("courses degree")
+      .populate("courses.course", "courseCredit level")
+      .populate("degree", "degreeType")
+      .lean();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        errorCode: "USER_NOT_FOUND",
+        message: "User not found, update failed",
+      });
+    }
+
+    const courseExist = user.courses.some(
+      (item) => item.course?._id.toString() === courseId,
+    );
+
+    if (!courseExist) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "COURSE_NOT_FOUND",
+        message: "Course already removed",
+      });
+    }
+
+    const remainingCourses = user.courses.filter(
+      (item) => item.course?._id.toString() !== courseId,
+    );
+
+    const gpaResults =
+      user.degree?.degreeType === "general"
+        ? calculateGeneralGPA(remainingCourses)
+        : calculateSpecialGPA(remainingCourses);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { courses: { course: courseId } },
+        $set: {
+          gpa: gpaResults.gpa,
+          totalCredits: gpaResults.totalCredits,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+      .select("-password")
+      .populate("courses.course")
+      .populate("degree");
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Course removed successfully",
+    });
+  } catch (error) {
+    console.error("Error in deselectCourse controller");
     res.status(500).json({
       success: false,
       errorCode: "CONTROLLER_ERROR",

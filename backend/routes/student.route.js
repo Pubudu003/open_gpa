@@ -3,6 +3,7 @@ import express from "express";
 import { protectedRoute } from "../middleware/auth.middleware.js";
 import {
   deselectCourse,
+  deselectCourse_modified,
   getAllCourses,
   getCourse,
   selectCourse,
@@ -36,7 +37,7 @@ router.get("/degrees", protectedRoute, getAllDegrees);
 router.get("/courses", protectedRoute, getAllCourses);
 router.get("/courses/:id", protectedRoute, getCourse);
 router.patch("/courses/:id/select", protectedRoute, selectCourse);
-router.delete("/courses/:id/deselect", protectedRoute, deselectCourse);
+router.delete("/courses/:id/deselect", protectedRoute, deselectCourse_modified);
 
 // Selected course in hand routes
 router.get("/courses-in-hand", protectedRoute, getAllCoursesInHand);

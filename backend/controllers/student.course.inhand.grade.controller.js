@@ -306,7 +306,7 @@ export const updateGrade_optimized = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      updatedUser,
+      user: updatedUser,
       message: "Grade updated successfully.",
     });
   } catch (error) {
