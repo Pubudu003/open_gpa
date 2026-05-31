@@ -51,7 +51,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
           grade,
         },
       );
-      setUser(res.data.updatedUser);
+      setUser(res.data.user);
       toast.success("Grade updated!");
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to update grade");
@@ -63,8 +63,10 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
   const handleRemove = async (courseId) => {
     setRemoving(courseId);
     try {
-      await axiosInstance.delete(`/student/courses/${courseId}/deselect`);
-      // await fetchData(true);
+      const res = await axiosInstance.delete(
+        `/student/courses/${courseId}/deselect`,
+      );
+      setUser(res.data.user);
       toast.success("Course removed!");
       onCourseRemoved(courseId);
     } catch (e) {
