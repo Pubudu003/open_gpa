@@ -180,6 +180,173 @@ export const selectCourse = async (req, res) => {
   }
 };
 
+export const selectCourse_modified = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Something went wrong, cannot select course",
+      });
+    }
+
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate("courses.course")
+      .populate("degree")
+      .lean();
+
+    const courseExist = user.courses.some(
+      (item) =>
+        (item.course?._id.toString() || item.course.toString()) === courseId,
+    );
+
+    if (courseExist) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "COURSE_ALREADY_SELECTED",
+        message: "Course is already selected",
+      });
+    }
+
+    const newCourses = user.courses.push({ course: courseId, gpv: 0 });
+
+    const gpaResults =
+      user.degree?.degreeType === "general"
+        ? calculateGeneralGPA(user.courses)
+        : calculateSpecialGPA(user.courses);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: { courses: { course: courseId } },
+        $set: {
+          gpa: gpaResults.gpa,
+          totalCredits: gpaResults.totalCredits,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+      .select("-password")
+      .populate("courses.course")
+      .populate("degree");
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Course selected successfully",
+    });
+  } catch (error) {
+    console.error("Error in selectCourse controller", error);
+    res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error",
+    });
+  }
+};
+
+export const selectCourse_modified_02 = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_OR_INVALID_COURSE_ID",
+        message: "Something went wrong, cannot select course",
+      });
+    }
+
+    const [user, newCourseDetails] = await Promise.all([
+      User.findById(userId)
+        .select("-password")
+        .populate("courses.course")
+        .populate("degree")
+        .lean(),
+      Course.findById(courseId).lean(),
+    ]);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        errorCode: "USER_NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    if (!newCourseDetails) {
+      return res.status(404).json({
+        success: false,
+        errorCode: "COURSE_NOT_FOUND",
+        message: "Course not found",
+      });
+    }
+
+    const courseExists = user.courses.some(
+      (item) =>
+        (item.course?._id?.toString() || item.course?.toString()) === courseId,
+    );
+
+    if (courseExists) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "COURSE_ALREADY_SELECTED",
+        message: "Course is already selected",
+      });
+    }
+
+    // Temporary course object for in-memory calculations
+    const populatedNewCourse = {
+      course: newCourseDetails,
+      gpv: 0,
+    };
+
+    user.courses.push(populatedNewCourse);
+
+    const gpaResults =
+      user.degree?.degreeType === "general"
+        ? calculateGeneralGPA(user.courses)
+        : calculateSpecialGPA(user.courses);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: { courses: { course: courseId } },
+        $set: {
+          gpa: gpaResults.gpa,
+          totalCredits: gpaResults.totalCredits,
+        },
+      },
+      { new: true, runValidators: true },
+    )
+      .select("-password")
+      .populate("courses.course")
+      .populate("degree");
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Course selected successfully",
+    });
+  } catch (error) {
+    console.error("Error in selectCourse controller: ", error);
+    res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal server error",
+    });
+  }
+};
+
+// **** This need to be removed ****
 export const deselectCourse = async (req, res) => {
   try {
     const userId = req.user._id;
