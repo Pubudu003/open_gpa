@@ -7,6 +7,8 @@ import {
   getAllCourses,
   getCourse,
   selectCourse,
+  selectCourse_modified,
+  selectCourse_modified_02,
 } from "../controllers/student.course.controller.js";
 import {
   getProfile,
@@ -36,7 +38,7 @@ router.get("/degrees", protectedRoute, getAllDegrees);
 // Course routes
 router.get("/courses", protectedRoute, getAllCourses);
 router.get("/courses/:id", protectedRoute, getCourse);
-router.patch("/courses/:id/select", protectedRoute, selectCourse);
+router.patch("/courses/:id/select", protectedRoute, selectCourse_modified_02);
 router.delete("/courses/:id/deselect", protectedRoute, deselectCourse_modified);
 
 // Selected course in hand routes

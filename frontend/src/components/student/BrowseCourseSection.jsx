@@ -13,8 +13,10 @@ import { motion as Motion } from "framer-motion";
 import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
+  const { setUser } = useAuthStore();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(null);
@@ -46,7 +48,10 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
   const handleAdd = async (courseId) => {
     setAdding(courseId);
     try {
-      await axiosInstance.patch(`/student/courses/${courseId}/select`);
+      const res = await axiosInstance.patch(
+        `/student/courses/${courseId}/select`,
+      );
+      setUser(res.data.user);
       toast.success("Course added!");
       onCourseAdded(courseId);
     } catch (e) {

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { useAuthStore } from "../stores/useAuthStore";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
@@ -21,7 +21,6 @@ import DegreeChangingWarning from "../components/student/DegreeChangingWarning";
 import ProfileSection from "../components/student/ProfileSection";
 import BrowseCourseSection from "../components/student/BrowseCourseSection";
 import MyCoursesSection from "../components/student/MyCoursesSection";
-import axiosInstance from "../lib/axios";
 
 const NAV_ITEMS = [
   { id: "profile", label: "My Profile", icon: User },
@@ -32,7 +31,7 @@ const NAV_ITEMS = [
 ];
 
 const StudentDashboardPage = () => {
-  const { user, logout, getProfile, setUser } = useAuthStore();
+  const { user, logout, getProfile } = useAuthStore();
   const [activeTab, setActiveTab] = useState("profile");
 
   const [selectedCourseIds, setSelectedCourseIds] = useState([]);
