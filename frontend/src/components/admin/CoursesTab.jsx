@@ -121,7 +121,10 @@ const CoursesTab = () => {
         `admin/courses/${modal.delete._id}`,
       );
       toast.success(
-        `${res.data.message}, ${res.data.result.modifiedCount} users are effected.`,
+        `${res.data.message}, effected student users: ${res.data.result.modifiedCount}`,
+        {
+          duration: 10000,
+        },
       );
       setModal(null);
       fetchAll();
