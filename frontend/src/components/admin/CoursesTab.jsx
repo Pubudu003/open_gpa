@@ -90,9 +90,9 @@ const CoursesTab = () => {
         ...data,
         courseCredit: Number(data.courseCredit),
       });
-      toast.success("Course added!");
       setModal(null);
       fetchAll();
+      toast.success("Course added!");
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to add course");
     } finally {
@@ -106,9 +106,9 @@ const CoursesTab = () => {
         ...data,
         courseCredit: Number(data.courseCredit),
       });
-      toast.success("Course updated!");
       setModal(null);
       fetchAll();
+      toast.success("Course updated!");
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to update course");
     }
@@ -120,14 +120,14 @@ const CoursesTab = () => {
       const res = await axiosInstance.delete(
         `admin/courses/${modal.delete._id}`,
       );
+      setModal(null);
+      fetchAll();
       toast.success(
         `${res.data.message}, effected student users: ${res.data.result.modifiedCount}`,
         {
           duration: 10000,
         },
       );
-      setModal(null);
-      fetchAll();
     } catch (e) {
       toast.error(e.response?.data?.message || "Failed to delete course");
     } finally {
