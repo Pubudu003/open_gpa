@@ -117,8 +117,12 @@ const CoursesTab = () => {
   const handleDelete = async () => {
     setSaving(true);
     try {
-      await axiosInstance.delete(`admin/courses/${modal.delete._id}`);
-      toast.success("Course deleted!");
+      const res = await axiosInstance.delete(
+        `admin/courses/${modal.delete._id}`,
+      );
+      toast.success(
+        `${res.data.message}, ${res.data.result.modifiedCount} users are effected.`,
+      );
       setModal(null);
       fetchAll();
     } catch (e) {
