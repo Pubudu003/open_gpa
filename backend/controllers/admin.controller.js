@@ -271,8 +271,15 @@ export const deleteCourse = async (req, res) => {
       });
     }
 
+    // Testing purposes ********************************************
+    const result = await User.updateMany(
+      { "courses.course": courseId },
+      { $pull: { courses: { course: courseId } } },
+    );
+
     return res.status(200).json({
       success: true,
+      result: result,
       message: "Course deleted successfully",
     });
   } catch (error) {

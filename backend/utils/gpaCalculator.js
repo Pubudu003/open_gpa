@@ -50,7 +50,7 @@ export const calculateGeneralGPA = (courses) => {
     totalCreditWeightedGPV += creditWeightedGPV;
   }
 
-  const gpa = totalCreditWeightedGPV / totalCredits;
+  const gpa = totalCredits === 0 ? 0 : totalCreditWeightedGPV / totalCredits;
   const gpaFormatted = parseFloat(gpa.toFixed(2));
 
   return { gpa: gpaFormatted, totalCredits };
@@ -87,7 +87,10 @@ export const calculateSpecialGPA = (courses) => {
     totalCreditWeightedGPV += creditWeightedGPV;
   }
 
-  const gpa = totalCreditWeightedGPV / cumulativeWeightedCredit;
+  const gpa =
+    cumulativeWeightedCredit === 0
+      ? 0
+      : totalCreditWeightedGPV / cumulativeWeightedCredit;
   const gpaFormatted = parseFloat(gpa.toFixed(2));
 
   return { gpa: gpaFormatted, totalCredits };
