@@ -45,7 +45,7 @@ const DegreeMultiSelect = ({ degrees, selected, onToggle }) => {
       />
 
       {/* degree selecting */}
-      <div className="max-h-40 space-y-1 overflow-y-auto rounded-lg border border-gray-700 bg-gray-800/40 p-2 pr-1">
+      <div className="max-h-30 space-y-1 overflow-y-auto rounded-lg border border-gray-700 bg-gray-800/40 p-2 pr-1">
         {filtered.length === 0 && degrees.length > 0 && (
           <p className="py-3 text-center text-xs text-gray-500">
             No degrees match your search

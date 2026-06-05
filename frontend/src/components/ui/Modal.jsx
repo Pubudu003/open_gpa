@@ -35,7 +35,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             </div>
 
             {/* Content */}
-            <div className="p-6">{children}</div>
+            <div className="max-h-140 overflow-y-auto p-6">{children}</div>
           </Motion.div>
         </div>
       )}
