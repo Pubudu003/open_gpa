@@ -8,7 +8,7 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
 import { GRADES, GPV_MAP, gradeColor } from "./constants";
@@ -16,7 +16,7 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 const MyCoursesSection = ({ onCourseRemoved }) => {
-  const { user, setUser, getProfile } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   // const [coursesInHand, setCoursesInHand] = useState([]);
   // const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
   const [loading, setLoading] = useState(false);
@@ -357,98 +357,6 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                   </div>
                 </div>
               ))}
-          </div>
-
-          <div className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-900">
-            <div className="border-b border-gray-700 px-5 py-4">
-              <h3 className="font-semibold text-white">
-                Selected Courses ({user.courses.length})
-              </h3>
-            </div>
-            <div className="divide-y divide-gray-700/50">
-              {user.courses.map((item) => {
-                const course = item.course;
-                if (!course) return null;
-                return (
-                  <div
-                    key={item._id || course._id}
-                    className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-800/30"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-0.5 flex items-center gap-2">
-                        <span className="font-mono text-xs text-sky-400 uppercase">
-                          {course.courseCode}
-                        </span>
-                        <span className="text-xs text-gray-600">.</span>
-                        <span className="text-xs text-gray-500">
-                          {course.courseCredit} cr
-                        </span>
-                        <span className="text-xs text-gray-600">.</span>
-                        <span className="text-xs text-gray-500">
-                          L{course.level} S{course.semester}
-                        </span>
-                      </div>
-                      <p className="truncate text-sm font-medium text-white">
-                        {course.courseName}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <select
-                          value={item.grade || ""}
-                          onChange={(e) =>
-                            handleGradeChange(course._id, e.target.value)
-                          }
-                          disabled={updatingGrade === course._id}
-                          className={`appearance-none rounded-lg border border-gray-600 bg-gray-800 py-1.5 pr-7 pl-3 text-sm font-semibold transition-all focus:border-sky-500 focus:outline-none ${gradeColor(item.grade)} ${updatingGrade === course._id ? "opacity-60" : ""}`}
-                        >
-                          <option value="" disabled className="text-gray-500">
-                            Grade
-                          </option>
-                          {GRADES.map((g) => (
-                            <option key={g} value={g} className="text-white">
-                              {g}
-                            </option>
-                          ))}
-                        </select>
-                        {updatingGrade === course._id ? (
-                          <Loader2
-                            size={12}
-                            className="absolute top-1/2 right-2 -translate-y-1/2 animate-spin text-sky-400"
-                          />
-                        ) : (
-                          <ChevronDown
-                            size={12}
-                            className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 text-gray-400"
-                          />
-                        )}
-                      </div>
-                      {item.grade && (
-                        <span className="text-xs text-gray-500">
-                          GPV:{" "}
-                          <span
-                            className={`font-semibold ${gradeColor(item.grade)} transition-all`}
-                          >
-                            {GPV_MAP[item.grade]?.toFixed(2)}
-                          </span>
-                        </span>
-                      )}
-                      <button
-                        onClick={() => handleRemove(course._id)}
-                        disabled={removing === course._id}
-                        className="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-400/10 hover:text-red-400"
-                      >
-                        {removing === course._id ? (
-                          <Loader2 size={14} className="animate-spin" />
-                        ) : (
-                          <Trash2 size={14} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       )}

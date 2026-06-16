@@ -5,14 +5,6 @@ import { GraduationCap, User, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "../ui/Button";
 
 const NavBar = () => {
-  const user = true;
-  const userName = "Pubudu";
-  const isAdmin = true;
-
-  const handleLogout = async () => {
-    console.log("logout successfully!");
-  };
-
   return (
     <nav>
       <div className="mx-auto max-w-6xl px-6 sm:px-6 lg:px-8">

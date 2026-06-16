@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { useAuthStore } from "../stores/useAuthStore";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
@@ -31,7 +31,7 @@ const NAV_ITEMS = [
 ];
 
 const StudentDashboardPage = () => {
-  const { user, logout, getProfile } = useAuthStore();
+  const { user, logout, getProfile, silentProfileRefresh } = useAuthStore();
   const [activeTab, setActiveTab] = useState("profile");
 
   const [selectedCourseIds, setSelectedCourseIds] = useState([]);
@@ -59,6 +59,15 @@ const StudentDashboardPage = () => {
 
   //==================================================================
   */
+
+  useEffect(() => {
+    silentProfileRefresh();
+  }, [silentProfileRefresh]);
+
+  const handleNavigation = (id) => {
+    setActiveTab(id);
+    silentProfileRefresh();
+  };
 
   if (user?.courses !== prevCourses) {
     setPrevCourses(user?.courses);
@@ -115,7 +124,7 @@ const StudentDashboardPage = () => {
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => setActiveTab(id)}
+              onClick={() => handleNavigation(id)}
               className={`transaction-all flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium ${
                 activeTab === id
                   ? "bg-sky-500/15 text-sky-400"
