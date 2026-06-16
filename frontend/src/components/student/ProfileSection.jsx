@@ -138,7 +138,6 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
             onCancel={() => {
               setShowWarning(false);
               setSelectedDegree(user?.degree?._id || "");
-              console.log("Cancel Button Clicked on degree change warning.");
             }}
           />
         )}

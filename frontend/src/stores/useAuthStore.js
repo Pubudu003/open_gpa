@@ -16,8 +16,6 @@ export const useAuthStore = create((set) => ({
       return { success: false };
     }
 
-    console.log({ userName, email, password });
-
     try {
       const res = await axiosInstance.post("/auth/signup", {
         userName,
@@ -86,6 +84,20 @@ export const useAuthStore = create((set) => ({
       }
     } finally {
       set({ checkingAuth: false });
+    }
+  },
+
+  silentProfileRefresh: async () => {
+    try {
+      const res = await axiosInstance.get("/student/profile");
+      set({ user: res.data.userProfile });
+    } catch {
+      try {
+        const res = await axiosInstance.get("/admin/profile");
+        set({ user: res.data.userProfile });
+      } catch {
+        set({ user: null });
+      }
     }
   },
 
