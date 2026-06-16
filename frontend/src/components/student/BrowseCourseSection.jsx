@@ -209,7 +209,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                 <h3 className="mb-3 px-1 text-sm font-semibold tracking-wider text-gray-400 uppercase">
                   {group}
                 </h3>
-                <div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {groupCourses.map((c) => {
                     const isAdded = selectedCourseIds.includes(c._id);
                     return (
