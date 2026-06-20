@@ -22,6 +22,7 @@ import ProfileSection from "../components/student/ProfileSection";
 import BrowseCourseSection from "../components/student/BrowseCourseSection";
 import MyCoursesSection from "../components/student/MyCoursesSection";
 import AboutSection from "../components/student/AboutSection";
+import ContactSection from "../components/student/ContactSection";
 
 const NAV_ITEMS = [
   { id: "profile", label: "My Profile", icon: User },
@@ -206,7 +207,11 @@ const StudentDashboardPage = () => {
                 <AboutSection />
               </div>
             )}
-            {activeTab === "contact" && <div>Contact content</div>}
+            {activeTab === "contact" && (
+              <div>
+                <ContactSection />
+              </div>
+            )}
           </Motion.div>
         </AnimatePresence>
       </main>
