@@ -21,6 +21,7 @@ import DegreeChangingWarning from "../components/student/DegreeChangingWarning";
 import ProfileSection from "../components/student/ProfileSection";
 import BrowseCourseSection from "../components/student/BrowseCourseSection";
 import MyCoursesSection from "../components/student/MyCoursesSection";
+import AboutSection from "../components/student/AboutSection";
 
 const NAV_ITEMS = [
   { id: "profile", label: "My Profile", icon: User },
@@ -200,7 +201,11 @@ const StudentDashboardPage = () => {
                 <MyCoursesSection onCourseRemoved={handleCourseRemoved} />
               </div>
             )}
-            {activeTab === "about" && <div>About content</div>}
+            {activeTab === "about" && (
+              <div>
+                <AboutSection />
+              </div>
+            )}
             {activeTab === "contact" && <div>Contact content</div>}
           </Motion.div>
         </AnimatePresence>
