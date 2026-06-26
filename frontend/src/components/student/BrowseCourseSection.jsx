@@ -219,7 +219,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                         animate={{ opacity: 1, y: 0 }}
                         className="rounded-xl border border-gray-700 bg-gray-900 p-4 transition-all hover:border-gray-600"
                       >
-                        <div className="">
+                        <div className="flex justify-between gap-2">
                           <div>
                             <div className="mb-1 flex items-center gap-2">
                               <span className="font-mono text-xs font-semibold text-sky-400 uppercase">
@@ -236,32 +236,40 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                               {c.courseName}
                             </p>
                             {c.courseDescription && (
-                              <p className="mt-1 line-clamp-2 text-xs text-gray-500">
-                                {c.courseDescription}
-                              </p>
+                              <div className="group relative">
+                                <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+                                  {c.courseDescription}
+                                </p>
+                                {/* Tooltip */}
+                                <div className="absolute top-full left-0 z-10 mt-2 hidden w-64 rounded-md bg-gray-800/90 p-2 text-xs text-gray-400 shadow-lg group-hover:block">
+                                  {c.courseDescription}
+                                </div>
+                              </div>
                             )}
                           </div>
-                          <button
-                            onClick={() => handleAdd(c._id)}
-                            disabled={isAdded || adding === c._id}
-                            className={`mt-2 flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                              isAdded
-                                ? "cursor-default bg-emerald-500/15 text-emerald-400"
-                                : "bg-sky-600 text-white hover:bg-sky-500"
-                            }`}
-                          >
-                            {adding === c._id ? (
-                              <Loader2 size={12} className="animate-spin" />
-                            ) : isAdded ? (
-                              <>
-                                <Check size={12} /> Added
-                              </>
-                            ) : (
-                              <>
-                                <Plus size={12} /> Add
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-end">
+                            <button
+                              onClick={() => handleAdd(c._id)}
+                              disabled={isAdded || adding === c._id}
+                              className={`flex min-h-10 min-w-24 shrink-0 items-center justify-center gap-2.5 rounded-lg px-4 py-2.5 text-xs font-medium transition-all ${
+                                isAdded
+                                  ? "cursor-default bg-emerald-500/15 text-emerald-400"
+                                  : "bg-sky-600 text-white hover:bg-sky-500"
+                              }`}
+                            >
+                              {adding === c._id ? (
+                                <Loader2 size={12} className="animate-spin" />
+                              ) : isAdded ? (
+                                <>
+                                  <Check size={12} /> Added
+                                </>
+                              ) : (
+                                <>
+                                  <Plus size={12} /> Add
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </Motion.div>
                     );

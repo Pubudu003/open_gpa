@@ -95,10 +95,7 @@ const AboutSection = () => {
               {/* Profile Image */}
               <div className="h-32 w-32 overflow-hidden rounded-full">
                 <div className="h-full w-full object-cover">
-                  <img
-                    src="../../public/sample_prop_image.jpg"
-                    alt="prop_pic"
-                  />
+                  <img src="/sample_prop_image.jpg" alt="prop_pic" />
                 </div>
               </div>
               {/* Profile Info */}
