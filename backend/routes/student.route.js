@@ -18,6 +18,7 @@ import {
 import { updateGrade } from "../controllers/student.course.inhand.grade.controller.js";
 import { getGPA } from "../controllers/student.gpa.controller.js";
 import { getAllDegrees } from "../controllers/student.degree.controller.js";
+import { sendFeedback } from "../controllers/student.feedback.controller.js";
 
 const router = express.Router();
 
@@ -44,5 +45,8 @@ router.patch("/courses-in-hand/:id/grade", protectedRoute, updateGrade);
 
 // GPA routes
 router.get("/gpa", protectedRoute, getGPA);
+
+// Feedback routes
+router.post("/feedback", protectedRoute, sendFeedback);
 
 export default router;
