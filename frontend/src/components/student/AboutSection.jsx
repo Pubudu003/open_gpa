@@ -130,7 +130,7 @@ const AboutSection = () => {
           <Motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="space-y-3 rounded-2xl border border-gray-700 bg-gray-900 p-6">
               <div className="flex items-center gap-2">
@@ -169,7 +169,7 @@ const AboutSection = () => {
           <Motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             <div className="space-y-3 rounded-2xl border border-gray-700 bg-gray-900 p-6">
               <div className="flex items-center gap-2">

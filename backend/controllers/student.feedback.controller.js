@@ -8,8 +8,7 @@ const generateFeedbackNo = (feedbacks) => {
 
 export const sendFeedback = async (req, res) => {
   try {
-    //const email = req.user?.email;
-    const email = "test@gmail.com";
+    const email = req.user?.email;
     const { studentName, feedbackText } = req.body;
 
     if (!studentName || !feedbackText) {
