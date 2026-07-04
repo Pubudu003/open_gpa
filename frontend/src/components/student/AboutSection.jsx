@@ -1,4 +1,4 @@
-import { CodeXml, TrendingUp, TriangleAlert } from "lucide-react";
+import { CodeXml, TrendingUp, TriangleAlert, Wrench } from "lucide-react";
 import StackIcon from "tech-stack-icons";
 import React from "react";
 import { motion as Motion } from "framer-motion";
@@ -66,13 +66,13 @@ const AboutSection = () => {
     },
     {
       label: "JWT Auth",
-      name: "",
+      name: "stackLogo_01",
       color: "bg-orange-400/50",
       borderColor: "border-orange-800/50",
     },
     {
       label: "REST API",
-      name: "",
+      name: "stackLogo_02",
       color: "bg-cyan-400/50",
       borderColor: "border-cyan-800",
     },
@@ -91,7 +91,7 @@ const AboutSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center gap-4 rounded-2xl border border-gray-700 bg-gray-900 p-6">
+            <div className="flex flex-col items-center gap-4 rounded-2xl border border-gray-700 bg-gray-900 p-6 md:flex-row">
               {/* Profile Image */}
               <div className="h-32 w-32 overflow-hidden rounded-full">
                 <div className="h-full w-full object-cover">
@@ -99,9 +99,9 @@ const AboutSection = () => {
                 </div>
               </div>
               {/* Profile Info */}
-              <div className="flex-1 space-y-2">
+              <div className="flex flex-col space-y-2 text-center md:flex-1 md:text-left">
                 <p className="text-2xl font-bold">Pubudu Lakshan</p>
-                <div>
+                <div className="grid grid-cols-2 gap-1 md:block">
                   {SKILL_TAGS.map(({ label, textColor, backColor }) => (
                     <span
                       key={label}
@@ -148,11 +148,15 @@ const AboutSection = () => {
                     <div
                       className={`h-6 w-6 ${color} border-2 ${borderColor} ml-1 flex items-center justify-center rounded-full`}
                     >
-                      <StackIcon
-                        name={name}
-                        variant="grayscale"
-                        className="p-0.5"
-                      />
+                      {name.startsWith("stackLogo") ? (
+                        <Wrench size={14} />
+                      ) : (
+                        <StackIcon
+                          name={name}
+                          variant="grayscale"
+                          className="p-0.5"
+                        />
+                      )}
                     </div>
                     <p className="text-sm font-normal text-gray-400">{label}</p>
                   </div>
