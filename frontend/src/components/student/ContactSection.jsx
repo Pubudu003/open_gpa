@@ -60,12 +60,13 @@ const ContactSection = () => {
     };
   }, []);
 
-  const handleExLink = (link) => {
-    //window.open(`https://${link}`, "_blank");
-    if (isSmallScreen) {
-      console.log("Small Screen");
+  const handleExLink = (label, link) => {
+    if (label === "Email") {
+      const recipient = link;
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipient}`;
+      window.open(gmailUrl, "_blank");
     } else {
-      console.log("Large screen");
+      window.open(`https://${link}`, "_blank");
     }
   };
 
@@ -108,27 +109,30 @@ const ContactSection = () => {
                 {CONTACTS.map(
                   ({ label, icon: Icon, link, iconColor, borderColor }) => {
                     return (
-                      <div
-                        className={`flex flex-col rounded-md rounded-l-md border border-l-4 border-gray-700 md:grid md:grid-cols-[120px_1fr_auto] ${borderColor} cursor-pointer bg-gray-600/30 px-4 py-2 hover:bg-gray-600/50`}
-                        key={label}
-                        onClick={handleExLink}
-                      >
-                        <div className="flex items-center justify-start gap-4">
-                          <Icon size={22} className={`${iconColor}`} />
-                          <p className="font-semibold text-gray-500">{label}</p>
-                        </div>
-
-                        <div className="flex min-w-0 items-center justify-start">
-                          <p className="ml-10 text-sm whitespace-nowrap text-gray-400">
-                            {link}
-                          </p>
-                        </div>
-                        <div className="hidden items-center justify-end md:flex">
-                          <ExternalLink
-                            size={14}
-                            className="text-gray-400 group-hover:text-white"
-                          />
-                        </div>
+                      <div key={label} className="flex flex-col gap-2">
+                        <button
+                          className={`rounded-md rounded-l-md border border-l-4 border-gray-700 md:grid md:grid-cols-[120px_1fr_auto] ${borderColor} cursor-pointer bg-gray-600/30 px-4 py-2 hover:bg-gray-600/50`}
+                          key={label}
+                          onClick={() => handleExLink(label, link)}
+                        >
+                          <div className="flex items-center justify-start gap-4">
+                            <Icon size={22} className={`${iconColor}`} />
+                            <p className="font-semibold text-gray-500">
+                              {label}
+                            </p>
+                          </div>
+                          <div className="flex min-w-0 items-center justify-start">
+                            <p className="ml-10 text-sm whitespace-nowrap text-gray-400">
+                              {link}
+                            </p>
+                          </div>
+                          <div className="hidden items-center justify-end md:flex">
+                            <ExternalLink
+                              size={14}
+                              className="text-gray-400 group-hover:text-white"
+                            />
+                          </div>
+                        </button>
                       </div>
                     );
                   },
