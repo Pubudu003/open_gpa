@@ -10,6 +10,7 @@ import {
   Award,
   BookMarked,
   AlertCircle,
+  Menu,
 } from "lucide-react";
 
 import { useAuthStore } from "../stores/useAuthStore";
@@ -35,32 +36,10 @@ const NAV_ITEMS = [
 const StudentDashboardPage = () => {
   const { user, logout, getProfile, silentProfileRefresh } = useAuthStore();
   const [activeTab, setActiveTab] = useState("profile");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [selectedCourseIds, setSelectedCourseIds] = useState([]);
   const [prevCourses, setPrevCourses] = useState(null);
-
-  // temporary fix for issue where the gpa details are not refreshed after course grade change.
-  /* const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
-
-  const fetchGpaData = useCallback(async () => {
-    try {
-      const gpaRes = await axiosInstance.get("/student/gpa");
-      setGpaData((prevGpaData) => ({
-        ...prevGpaData,
-        gpa: gpaRes.data.userGPA?.gpa || 0,
-        totalCredits: gpaRes.data.userGPA?.totalCredits || 0,
-      }));
-    } catch {
-      setGpaData({ gpa: 0, totalCredits: 0 });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchGpaData();
-  }, [fetchGpaData]);
-
-  //==================================================================
-  */
 
   useEffect(() => {
     silentProfileRefresh();
@@ -68,6 +47,7 @@ const StudentDashboardPage = () => {
 
   const handleNavigation = (id) => {
     setActiveTab(id);
+    setSidebarOpen(false);
     silentProfileRefresh();
   };
 
@@ -94,7 +74,18 @@ const StudentDashboardPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-950">
       {/* Sidebar */}
-      <aside className="fixed top-0 left-0 flex min-h-screen w-64 flex-col border-r border-gray-700/50 bg-gray-900">
+      {/* Mobile Sidebar backdrop Overlay */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-xs md:hidden"
+        />
+      )}
+      <aside
+        className={`fixed top-0 left-0 z-40 flex min-h-screen w-64 flex-col border-r border-gray-700/50 bg-gray-900 transition-transform duration-300 md:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         {/* Brand */}
         <div className="border-b border-gray-700/50 px-6 py-6">
           <div className="flex items-center gap-3">
@@ -127,7 +118,7 @@ const StudentDashboardPage = () => {
             <button
               key={id}
               onClick={() => handleNavigation(id)}
-              className={`transaction-all flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium ${
+              className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                 activeTab === id
                   ? "bg-sky-500/15 text-sky-400"
                   : "text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -164,57 +155,75 @@ const StudentDashboardPage = () => {
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="ml-64 min-h-screen flex-1 p-8">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-sm text-gray-400">Student Dashboard</p>
-          <h1 className="text-2xl font-bold text-white">
-            {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
-          </h1>
-        </div>
-
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          <Motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="max-w-3xl"
+      {/* Main Content Wrapper */}
+      <div className="flex min-w-0 flex-1 flex-col md:ml-64">
+        {/* Mobile Sticky Header (Hidden on Desktop) */}
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-800 bg-gray-900 px-4 py-3 md:hidden">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
           >
-            {activeTab === "profile" && (
-              <div>
-                <ProfileSection user={user} onProfileUpdate={refreshProfile} />
-              </div>
-            )}
-            {activeTab === "browse" && (
-              <div>
-                <BrowseCourseSection
-                  selectedCourseIds={selectedCourseIds}
-                  onCourseAdded={handleCourseAdded}
-                />
-              </div>
-            )}
-            {activeTab === "mycourses" && (
-              <div>
-                <MyCoursesSection onCourseRemoved={handleCourseRemoved} />
-              </div>
-            )}
-            {activeTab === "about" && (
-              <div>
-                <AboutSection />
-              </div>
-            )}
-            {activeTab === "contact" && (
-              <div>
-                <ContactSection />
-              </div>
-            )}
-          </Motion.div>
-        </AnimatePresence>
-      </main>
+            <Menu size={20} />
+          </button>
+          <span className="text-sm font-bold text-white">OPEN GPA</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-sky-500 to-violet-600 text-xs font-bold text-white uppercase">
+            {user?.userName?.[0] || "S"}
+          </div>
+        </header>
+        {/* Main Content */}
+        <main className="flex-1 p-4 sm:p-6 md:p-8">
+          {/* Header Title inside Dashboard */}
+          <div className="mb-8">
+            <p className="text-sm text-gray-400">Student Dashboard</p>
+            <h1 className="text-2xl font-bold text-white">
+              {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
+            </h1>
+          </div>
+          {/* Content */}
+          <AnimatePresence mode="wait">
+            <Motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="max-w-4xl"
+            >
+              {activeTab === "profile" && (
+                <div>
+                  <ProfileSection
+                    user={user}
+                    onProfileUpdate={refreshProfile}
+                  />
+                </div>
+              )}
+              {activeTab === "browse" && (
+                <div>
+                  <BrowseCourseSection
+                    selectedCourseIds={selectedCourseIds}
+                    onCourseAdded={handleCourseAdded}
+                  />
+                </div>
+              )}
+              {activeTab === "mycourses" && (
+                <div>
+                  <MyCoursesSection onCourseRemoved={handleCourseRemoved} />
+                </div>
+              )}
+              {activeTab === "about" && (
+                <div>
+                  <AboutSection />
+                </div>
+              )}
+              {activeTab === "contact" && (
+                <div>
+                  <ContactSection />
+                </div>
+              )}
+            </Motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
     </div>
   );
 };
