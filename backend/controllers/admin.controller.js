@@ -32,21 +32,6 @@ export const getProfile = async (req, res) => {
   }
 };
 
-/*export const updateProfile = async (req, res) => {
-  try {
-    return res.status(200).json({ 
-      success: true, 
-      message: "Profile updated successfully." 
-    });
-  } catch (error) {
-    console.log("Error in updateProfile controller", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
-    });
-  }
-}*/
-
 // Course controllers
 export const getAllCourses = async (req, res) => {
   try {
@@ -484,8 +469,20 @@ export const deleteDegree = async (req, res) => {
       });
     }
 
+    const userResults = await User.updateMany(
+      { degree: degree._id },
+      { $set: { degree: null, courses: [], gpa: 0, totalCredits: 0 } },
+    );
+
+    const courseResults = await Course.updateMany(
+      { degree: degree._id },
+      { $pull: { degree: degree._id } },
+    );
+
     return res.status(200).json({
       success: true,
+      userResults,
+      courseResults,
       message: "degree deleted successfully.",
     });
   } catch (error) {

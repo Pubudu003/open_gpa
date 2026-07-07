@@ -69,7 +69,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   const GPA_CARD_VALUES = [
     {
       label: "GPA",
-      value: user.gpa.toFixed(2),
+      value: user?.gpa?.toFixed(2),
       icon: TrendingUp,
       color: "text-emerald-400",
     },
