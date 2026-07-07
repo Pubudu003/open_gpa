@@ -17,8 +17,7 @@ import { useAuthStore } from "../../stores/useAuthStore";
 
 const MyCoursesSection = ({ onCourseRemoved }) => {
   const { user, setUser } = useAuthStore();
-  // const [coursesInHand, setCoursesInHand] = useState([]);
-  // const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
+
   const [loading, setLoading] = useState(false);
   const [updatingGrade, setUpdatingGrade] = useState(null);
   const [removing, setRemoving] = useState(null);
@@ -27,28 +26,6 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
   const [filterLevel, setFilterLevel] = useState("all");
   const [filterSemester, setFilterSemester] = useState("all");
   const [filterCredit, setFilterCredit] = useState("all");
-
-  /*
-  const fetchData = useCallback(async (silent = false) => {
-    if (!silent) setLoading(true);
-    try {
-      const [ihRes, gpaRes] = await Promise.all([
-        axiosInstance.get("/student/courses-in-hand"),
-        axiosInstance.get("/student/gpa"),
-      ]);
-      setCoursesInHand(ihRes.data.courses?.courses || []);
-      setGpaData(gpaRes.data.userGPA || { gpa: 0, totalCredits: 0 });
-    } catch {
-      toast.error("Failed to load your courses");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-  */
 
   const handleGradeChange = async (courseId, grade) => {
     setUpdatingGrade(courseId);
@@ -197,7 +174,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Filter size={14} className="shrink-0 text-gray-500" />
               <select
                 value={filterLevel}
@@ -330,7 +307,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                               )}
                             </div>
                             {item.grade && (
-                              <span className="text-xs text-gray-500">
+                              <span className="hidden text-xs text-gray-500 sm:inline">
                                 GPV:{" "}
                                 <span
                                   className={`font-semibold ${gradeColor(item.grade)} transition-all`}

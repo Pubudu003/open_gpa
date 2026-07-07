@@ -139,7 +139,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
             </button>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Filter size={14} className="shrink-0 text-gray-500" />
           <select
             value={filterLevel}
@@ -182,7 +182,9 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
               <X size={12} /> Clear filters
             </button>
           )}
-          <span className="ml-auto text-xs text-gray-500">{}</span>
+          <span className="ml-auto text-xs text-gray-500">
+            {filtered.length} of {courses.length} Courses
+          </span>
         </div>
       </div>
 
@@ -209,7 +211,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                 <h3 className="mb-3 px-1 text-sm font-semibold tracking-wider text-gray-400 uppercase">
                   {group}
                 </h3>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {groupCourses.map((c) => {
                     const isAdded = selectedCourseIds.includes(c._id);
                     return (
@@ -251,7 +253,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                             <button
                               onClick={() => handleAdd(c._id)}
                               disabled={isAdded || adding === c._id}
-                              className={`flex min-h-10 min-w-24 shrink-0 items-center justify-center gap-2.5 rounded-lg px-4 py-2.5 text-xs font-medium transition-all ${
+                              className={`flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${
                                 isAdded
                                   ? "cursor-default bg-emerald-500/15 text-emerald-400"
                                   : "bg-sky-600 text-white hover:bg-sky-500"

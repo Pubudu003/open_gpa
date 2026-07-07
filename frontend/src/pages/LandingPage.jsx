@@ -102,7 +102,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-6 text-5xl leading-tight font-extrabold tracking-tight md:text-6xl"
+            className="mb-6 text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl md:text-6xl"
           >
             Track Your{" "}
             <span className="bg-gradient-to-r from-sky-400 to-violet-500 bg-clip-text text-transparent">
@@ -164,7 +164,7 @@ const LandingPage = () => {
             className="mt-16 flex flex-col items-center justify-center gap-8 sm:flex-row"
           >
             {STATS.map(({ icon: Icon, value, label }) => (
-              <div key={label} className="flex items-center gap-3 text-left">
+              <div key={label} className="flex items-center gap-4 text-left">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800">
                   <Icon size={18} className="text-sky-400" />
                 </div>

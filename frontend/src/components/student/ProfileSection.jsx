@@ -7,11 +7,7 @@ import DegreeChangingWarning from "./DegreeChangingWarning";
 import {
   GraduationCap,
   User,
-  BookOpen,
   TrendingUp,
-  Info,
-  ContactRound,
-  LogOut,
   AlertTriangle,
   Award,
   BookMarked,
@@ -158,7 +154,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
             {GPA_CARD_VALUES.map(({ label, value, icon: Icon, color }) => (
               <div
                 key={label}
@@ -180,7 +176,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
 
           {user?.degree ? (
             <div className="mb-4 rounded-xl border border-sky-500/20 bg-sky-500/10 p-4">
-              <p className="font-semibold text-sky-400">
+              <p className="font-semibold wrap-break-word text-sky-400">
                 {user.degree.degreeName}
               </p>
               <p className="text-sm text-gray-400">
