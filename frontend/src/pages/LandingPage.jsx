@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import NavBar from "../components/layout/NavBar";
 import { Button } from "../components/ui/Button";
 import Footer from "../components/layout/Footer";
+import { useEffect, useState } from "react";
 
 const STATS = [
   { icon: Users, value: "100%", label: "Degree Coverage" },
@@ -73,10 +74,33 @@ const fadeup = {
 };
 
 const LandingPage = () => {
+  const [showNavBtns, setShowNavBtns] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        // scrolling down
+        setShowNavBtns(false);
+      } else {
+        setShowNavBtns(true);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
     <div className="min-h-screen overflow-x-hidden text-white">
       {/* --- Navbar ---*/}
-      <header className="fixed top-0 right-0 left-0 z-50 border-b border-gray-800/60 bg-gray-950/50 backdrop-blur-md">
+      <header
+        className={`fixed top-0 right-0 left-0 z-50 border-b border-gray-800/60 bg-gray-950/50 backdrop-blur-md transition-transform duration-300 ${showNavBtns ? "translate-y-0" : "-translate-y-full"}`}
+      >
         <NavBar />
       </header>
 
