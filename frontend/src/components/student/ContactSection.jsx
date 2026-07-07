@@ -16,7 +16,6 @@ import axiosInstance from "../../lib/axios";
 import toast from "react-hot-toast";
 
 const ContactSection = () => {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -44,21 +43,6 @@ const ContactSection = () => {
       borderColor: "border-l-sky-500/80",
     },
   ];
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    //setIsSmallScreen(mediaQuery.matches);
-
-    const handleChange = (event) => {
-      setIsSmallScreen(event.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, []);
 
   const handleExLink = (label, link) => {
     if (label === "Email") {
@@ -122,7 +106,7 @@ const ContactSection = () => {
                             </p>
                           </div>
                           <div className="flex min-w-0 items-center justify-start">
-                            <p className="ml-10 text-sm whitespace-nowrap text-gray-400">
+                            <p className="ml-10 truncate text-sm text-gray-400">
                               {link}
                             </p>
                           </div>

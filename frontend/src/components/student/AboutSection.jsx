@@ -94,14 +94,16 @@ const AboutSection = () => {
             <div className="flex flex-col items-center gap-4 rounded-2xl border border-gray-700 bg-gray-900 p-6 md:flex-row">
               {/* Profile Image */}
               <div className="h-32 w-32 overflow-hidden rounded-full">
-                <div className="h-full w-full object-cover">
-                  <img src="/sample_prop_image.jpg" alt="prop_pic" />
-                </div>
+                <img
+                  src="/sample_prop_image.jpg"
+                  alt="Pubudu Lakshan - Developer"
+                  className="h-full w-full object-cover"
+                />
               </div>
               {/* Profile Info */}
               <div className="flex flex-col space-y-2 text-center md:flex-1 md:text-left">
                 <p className="text-2xl font-bold">Pubudu Lakshan</p>
-                <div className="grid grid-cols-2 gap-1 md:block">
+                <div className="grid grid-cols-2 gap-1 text-center md:grid-cols-2 lg:grid-cols-4">
                   {SKILL_TAGS.map(({ label, textColor, backColor }) => (
                     <span
                       key={label}

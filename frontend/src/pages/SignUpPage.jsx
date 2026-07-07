@@ -44,7 +44,7 @@ const SignUpPage = () => {
         className="absolute top-8 left-8 z-10 flex items-center justify-center gap-2 text-gray-400 transition-colors hover:text-white"
       >
         <ArrowLeft />
-        <span className="font-medium">Go Back</span>
+        <span className="hidden font-medium sm:block">Go Back</span>
       </Link>
 
       {/* --- Background glow */}
@@ -55,7 +55,7 @@ const SignUpPage = () => {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md"
+        className="relative mt-8 w-full max-w-md"
       >
         {/* --- Logo ---*/}
         <div className="mb-8 flex flex-col items-center">

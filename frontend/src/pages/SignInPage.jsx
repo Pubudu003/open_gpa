@@ -36,7 +36,7 @@ const SignInPage = () => {
         className="absolute top-8 left-8 z-10 flex items-center justify-center gap-2 text-gray-400 transition-colors hover:text-white"
       >
         <ArrowLeft />
-        <span className="font-medium">Go Back</span>
+        <span className="hidden font-medium sm:block">Go Back</span>
       </Link>
 
       {/* --- Background glow */}
