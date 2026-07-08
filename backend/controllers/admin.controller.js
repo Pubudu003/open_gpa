@@ -112,7 +112,6 @@ export const addNewCourse = async (req, res) => {
       !courseCode ||
       !courseName ||
       !courseCredit ||
-      !courseDescription ||
       !level ||
       !semester ||
       !degree
