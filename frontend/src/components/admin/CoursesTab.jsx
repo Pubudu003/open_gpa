@@ -8,6 +8,28 @@ import Modal from "../ui/Modal";
 import CourseForm from "./CourseForm";
 import DeleteConfirm from "./DeleteConfirm";
 
+const getPageNumbers = (current, total) => {
+  const delta = 2; // pages shown around current page
+  const pages = [];
+
+  const left = Math.max(2, current - delta);
+  const right = Math.min(total - 1, current + delta);
+
+  pages.push(1);
+
+  if (left > 2) pages.push("...");
+
+  for (let i = left; i <= right; i++) {
+    pages.push(i);
+  }
+
+  if (right < total - 1) pages.push("...");
+
+  if (total > 1) pages.push(total);
+
+  return pages;
+};
+
 const CoursesTab = () => {
   const [courses, setCourses] = useState([]);
   const [degrees, setDegrees] = useState([]);
@@ -21,6 +43,10 @@ const CoursesTab = () => {
   const [filterLevel, setFilterLevel] = useState("");
   const [filterSem, setFilterSem] = useState("");
   const [filterDegree, setFilterDegree] = useState("");
+
+  // Pagination state ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const COURSES_PER_PAGE = 10;
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -73,14 +99,29 @@ const CoursesTab = () => {
     return true;
   });
 
+  // Always sort by course code (alphabetical)
+  const sortedCourses = [...filteredCourses].sort((a, b) =>
+    a.courseCode.localeCompare(b.courseCode),
+  );
+
+  const totalPages = Math.ceil(sortedCourses.length / COURSES_PER_PAGE);
+
+  // Only 10 courses for the current page
+  const pagedCourses = sortedCourses.slice(
+    (currentPage - 1) * COURSES_PER_PAGE,
+    currentPage * COURSES_PER_PAGE,
+  );
+
   const isFiltered =
     courseSearch || filterCredits || filterLevel || filterSem || filterDegree;
+
   const clearFilter = () => {
     setCourseSearch("");
     setFilterCredits("");
     setFilterLevel("");
     setFilterSem("");
     setFilterDegree("");
+    setCurrentPage(1);
   };
 
   const handleAdd = async (data) => {
@@ -190,7 +231,10 @@ const CoursesTab = () => {
               type="text"
               value={courseSearch}
               placeholder="Search by code or name.."
-              onChange={(e) => setCourseSearch(e.target.value)}
+              onChange={(e) => {
+                setCourseSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2 pr-3 pl-8 text-xs text-white placeholder-gray-500 transition-all hover:bg-gray-800/70 focus:border-sky-500 focus:outline-none"
             />
           </div>
@@ -198,7 +242,10 @@ const CoursesTab = () => {
           {/* Credit filter */}
           <select
             value={filterCredits}
-            onChange={(e) => setFilterCredits(e.target.value)}
+            onChange={(e) => {
+              setFilterCredits(e.target.value);
+              setCurrentPage(1);
+            }}
             className={FILTER_SELECT_CLS}
           >
             <option value="">All Credits</option>
@@ -212,7 +259,10 @@ const CoursesTab = () => {
           {/* Level filter */}
           <select
             value={filterLevel}
-            onChange={(e) => setFilterLevel(e.target.value)}
+            onChange={(e) => {
+              setFilterLevel(e.target.value);
+              setCurrentPage(1);
+            }}
             className={FILTER_SELECT_CLS}
           >
             <option value="">All Levels</option>
@@ -226,7 +276,10 @@ const CoursesTab = () => {
           {/* Semester filter */}
           <select
             value={filterSem}
-            onChange={(e) => setFilterSem(e.target.value)}
+            onChange={(e) => {
+              setFilterSem(e.target.value);
+              setCurrentPage(1);
+            }}
             className={FILTER_SELECT_CLS}
           >
             <option value="">All Semesters</option>
@@ -240,7 +293,10 @@ const CoursesTab = () => {
           {/* Degree filter */}
           <select
             value={filterDegree}
-            onChange={(e) => setFilterDegree(e.target.value)}
+            onChange={(e) => {
+              setFilterDegree(e.target.value);
+              setCurrentPage(1);
+            }}
             className={FILTER_SELECT_CLS}
           >
             <option value="">All Degrees</option>
@@ -288,71 +344,140 @@ const CoursesTab = () => {
           </button>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-700">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-800/80">
-              <tr>
-                {["code", "name", "credits", "level", "sem", "degrees", ""].map(
-                  (h) => (
+        <>
+          <div className="overflow-hidden rounded-xl border border-gray-700">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-800/80">
+                <tr>
+                  {[
+                    "code",
+                    "name",
+                    "credits",
+                    "level",
+                    "sem",
+                    "degrees",
+                    "",
+                  ].map((h) => (
                     <th
                       key={h}
                       className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-gray-400 uppercase"
                     >
                       {h}
                     </th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-700/50">
-              {filteredCourses.map((c) => (
-                <tr
-                  key={c._id}
-                  className="transition-colors hover:bg-gray-800/40"
-                >
-                  <td className="px-4 py-3.5 font-mono font-medium text-sky-400 uppercase">
-                    {c.courseCode}
-                  </td>
-                  <td className="max-w-50 px-4 py-3.5 font-medium text-white">
-                    {c.courseName}
-                  </td>
-                  <td className="px-4 py-3.5 text-center text-gray-300">
-                    {c.courseCredit}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
-                      L{c.level}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
-                      S{c.semester}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5 text-xs text-gray-400">
-                    {degreeName(c.degree)}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <div className="flex items-center justify-end gap-2 text-gray-400">
-                      <button
-                        onClick={() => setModal({ edit: c })}
-                        className="rounded-lg p-1.5 transition-colors hover:bg-sky-400/10 hover:text-sky-400"
-                      >
-                        <Pencil size={15} />
-                      </button>
-                      <button
-                        onClick={() => setModal({ delete: c })}
-                        className="rounded-lg p-1.5 transition-colors hover:bg-red-400/10 hover:text-red-400"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  </td>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-700/50">
+                {pagedCourses.map((c) => (
+                  <tr
+                    key={c._id}
+                    className="transition-colors hover:bg-gray-800/40"
+                  >
+                    <td className="px-4 py-3.5 font-mono font-medium text-sky-400 uppercase">
+                      {c.courseCode}
+                    </td>
+                    <td className="max-w-50 px-4 py-3.5 font-medium text-white">
+                      {c.courseName}
+                    </td>
+                    <td className="px-4 py-3.5 text-center text-gray-300">
+                      {c.courseCredit}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
+                        L{c.level}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
+                        S{c.semester}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-xs text-gray-400">
+                      {degreeName(c.degree)}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center justify-end gap-2 text-gray-400">
+                        <button
+                          onClick={() => setModal({ edit: c })}
+                          className="rounded-lg p-1.5 transition-colors hover:bg-sky-400/10 hover:text-sky-400"
+                        >
+                          <Pencil size={15} />
+                        </button>
+                        <button
+                          onClick={() => setModal({ delete: c })}
+                          className="rounded-lg p-1.5 transition-colors hover:bg-red-400/10 hover:text-red-400"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-1">
+              {/* First */}
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                First
+              </button>
+              {/* Previous */}
+              <button
+                onClick={() => setCurrentPage((p) => p - 1)}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Prev
+              </button>
+              {/* Page Numbers */}
+              {getPageNumbers(currentPage, totalPages).map((item, i) =>
+                item === "..." ? (
+                  <span
+                    key={`ellipsis-${i}`}
+                    className="px-2 text-xs text-gray-500"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={item}
+                    onClick={() => setCurrentPage(item)}
+                    className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      currentPage === item
+                        ? "border-sky-500 bg-sky-600 text-white"
+                        : "border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ),
+              )}
+              {/* Next */}
+              <button
+                onClick={() => setCurrentPage((p) => p + 1)}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+              </button>
+              {/* Last */}
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Last
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {/* Add Modal */}
