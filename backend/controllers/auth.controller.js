@@ -24,16 +24,18 @@ const storeRefreshToken = async (userId, refreshToken) => {
 };
 
 const setCookies = (res, accessToken, refreshToken) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("accessToken", accessToken, {
     httpOnly: true, // prevent xss attacks
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 15 * 60 * 1000, // 15min
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true, // prevent xss attacks
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7days
   });
 };
@@ -136,6 +138,8 @@ export const signin = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   try {
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
@@ -146,8 +150,17 @@ export const logout = async (req, res) => {
       await redis.del(`refresh_token:${decoded.userId}`);
     }
 
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+    });
+
     return res.status(200).json({
       success: true,
       message: "Logged out successfully",
@@ -164,6 +177,8 @@ export const logout = async (req, res) => {
 
 // this will refresh the access token
 export const refreshToken = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   try {
     const refreshToken = req.cookies.refreshToken;
 
@@ -196,8 +211,8 @@ export const refreshToken = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000, // 15min
     });
 
@@ -214,6 +229,3 @@ export const refreshToken = async (req, res) => {
     });
   }
 };
-
-// To do
-//export const getProfile = async (req, res) => {};
