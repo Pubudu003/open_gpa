@@ -74,6 +74,14 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      <div className="mx-auto mt-2 max-w-6xl text-xs text-gray-400">
+        <a
+          href="https://www.flaticon.com/free-icons/university"
+          title="university icons"
+        >
+          University icons created by Nsit - Flaticon
+        </a>
+      </div>
     </footer>
   );
 };
