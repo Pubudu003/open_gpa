@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { redis } from "../lib/redis.js";
+import transporter from "../config/mail.js";
 
 const generateTokens = async (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -12,6 +13,35 @@ const generateTokens = async (userId) => {
   });
 
   return { accessToken, refreshToken };
+};
+
+const generateVerificationCode = async () => {
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000,
+  ).toString();
+
+  return { verificationCode };
+};
+
+const storeVerificationCode = async (userId, verificationCode) => {
+  await redis.set(`verification:${userId}`, verificationCode, "EX", 600); // 10 min
+};
+
+const sendVerificationEmail = async (receiver, verificationCode) => {
+  try {
+    await transporter.verify();
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: receiver,
+      subject: "Verify your Email",
+      html: `This is your verification code: ${verificationCode}`,
+    });
+
+    return true;
+  } catch (error) {
+    console.log("Verification email sending failed", error);
+    return false;
+  }
 };
 
 const storeRefreshToken = async (userId, refreshToken) => {
@@ -68,6 +98,11 @@ export const signup = async (req, res) => {
     const { accessToken, refreshToken } = await generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
 
+    // send verification code
+    const { verificationCode } = await generateVerificationCode();
+    await storeVerificationCode(user.id, verificationCode);
+    const isEmailSent = await sendVerificationEmail(email, verificationCode);
+
     setCookies(res, accessToken, refreshToken);
 
     return res.status(201).json({
@@ -78,6 +113,7 @@ export const signup = async (req, res) => {
         email: user.email,
         role: user.role,
       },
+      isEmailSent,
       message: "You have successfully signed up",
     });
   } catch (error) {
