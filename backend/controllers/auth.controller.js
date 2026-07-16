@@ -100,7 +100,7 @@ export const signup = async (req, res) => {
 
     // send verification code
     const { verificationCode } = await generateVerificationCode();
-    await storeVerificationCode(user.id, verificationCode);
+    await storeVerificationCode(user._id, verificationCode);
     const isEmailSent = await sendVerificationEmail(email, verificationCode);
 
     setCookies(res, accessToken, refreshToken);
@@ -262,6 +262,60 @@ export const refreshToken = async (req, res) => {
       success: false,
       errorCode: "CONTROLLER_ERROR",
       message: "Internal server error",
+    });
+  }
+};
+
+// verify email
+export const verifyEmail = async (req, res) => {
+  try {
+    const { verificationCode } = req.body;
+    const userId = req.user._id;
+    const savedVerificationCode = await redis.get(`verification:${userId}`);
+
+    if (!verificationCode) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_VERIFICATION_CODE",
+        message: "Please provide a verification code",
+      });
+    }
+
+    if (!savedVerificationCode) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "VERIFICATION_CODE_NOT_FOUND",
+        message: "Your verification code has expired, please request a new one",
+      });
+    }
+
+    if (savedVerificationCode !== verificationCode) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "INVALID_VERIFICATION_CODE",
+        message: "Invalid verification code",
+      });
+    }
+
+    const verifiedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { isVerified: true } },
+      { returnDocument: "after" },
+    );
+
+    await redis.del(`verification:${userId}`);
+
+    return res.status(200).json({
+      success: true,
+      verifiedUser,
+      message: "User verified successfully",
+    });
+  } catch (error) {
+    console.log("Error in verifyEmail controller: ", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error",
     });
   }
 };

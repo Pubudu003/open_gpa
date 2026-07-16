@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema(
     },
     isVerified: {
       type: Boolean,
-      required: false,
+      required: true,
+      default: false,
     },
     degree: {
       type: mongoose.Schema.Types.ObjectId,
