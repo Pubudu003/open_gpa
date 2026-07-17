@@ -1,6 +1,9 @@
 import express from "express";
 
-import { protectedRoute } from "../middleware/auth.middleware.js";
+import {
+  protectedRoute,
+  verifiedRoute,
+} from "../middleware/auth.middleware.js";
 import {
   deselectCourse,
   getAllCourses,
@@ -23,30 +26,55 @@ import { sendFeedback } from "../controllers/student.feedback.controller.js";
 const router = express.Router();
 
 // Profile routes
-router.get("/profile", protectedRoute, getProfile);
-router.patch("/profile", protectedRoute, updateProfile);
+router.get("/profile", protectedRoute, verifiedRoute, getProfile);
+router.patch("/profile", protectedRoute, verifiedRoute, updateProfile);
 
 // Degree routes
-router.get("/degrees", protectedRoute, getAllDegrees);
+router.get("/degrees", protectedRoute, verifiedRoute, getAllDegrees);
 
 // Course routes
-router.get("/courses", protectedRoute, getAllCourses);
-router.get("/courses/:id", protectedRoute, getCourse);
-router.patch("/courses/:id/select", protectedRoute, selectCourse);
-router.delete("/courses/:id/deselect", protectedRoute, deselectCourse);
+router.get("/courses", protectedRoute, verifiedRoute, getAllCourses);
+router.get("/courses/:id", protectedRoute, verifiedRoute, getCourse);
+router.patch(
+  "/courses/:id/select",
+  protectedRoute,
+  verifiedRoute,
+  selectCourse,
+);
+router.delete(
+  "/courses/:id/deselect",
+  protectedRoute,
+  verifiedRoute,
+  deselectCourse,
+);
 
 // Selected course in hand routes
-router.get("/courses-in-hand", protectedRoute, getAllCoursesInHand);
-router.get("/courses-in-hand/:id", protectedRoute, getCourseInHand);
+router.get(
+  "/courses-in-hand",
+  protectedRoute,
+  verifiedRoute,
+  getAllCoursesInHand,
+);
+router.get(
+  "/courses-in-hand/:id",
+  protectedRoute,
+  verifiedRoute,
+  getCourseInHand,
+);
 
 // Grade routes
-router.patch("/courses-in-hand/:id/grade", protectedRoute, updateGrade);
-//router.get("/courses-in-hand/grade", protectedRoute, getGrade);
+router.patch(
+  "/courses-in-hand/:id/grade",
+  protectedRoute,
+  verifiedRoute,
+  updateGrade,
+);
+//router.get("/courses-in-hand/grade", protectedRoute, verifiedRoute, getGrade);
 
 // GPA routes
-router.get("/gpa", protectedRoute, getGPA);
+router.get("/gpa", protectedRoute, verifiedRoute, getGPA);
 
 // Feedback routes
-router.post("/feedback", protectedRoute, sendFeedback);
+router.post("/feedback", protectedRoute, verifiedRoute, sendFeedback);
 
 export default router;

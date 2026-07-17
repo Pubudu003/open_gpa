@@ -6,10 +6,10 @@ export const protectedRoute = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
         errorCode: "NO_ACCESS_TOKEN",
-        message: "Unauthorized - no access token provided"
+        message: "Unauthorized - no access token provided",
       });
     }
 
@@ -18,10 +18,10 @@ export const protectedRoute = async (req, res, next) => {
       const user = await User.findById(decoded.userId).select("-password");
 
       if (!user) {
-        return res.status(401).json({ 
+        return res.status(401).json({
           success: false,
           errorCode: "USER_NOT_FOUND",
-          message: "User not found" 
+          message: "User not found",
         });
       }
 
@@ -29,31 +29,44 @@ export const protectedRoute = async (req, res, next) => {
       next();
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        return res.status(401).json({ 
+        return res.status(401).json({
           success: false,
           errorCode: "ACCESS_TOKEN_EXPIRED",
-          message: "Unauthorized - access token expired" 
+          message: "Unauthorized - access token expired",
         });
       }
       throw error;
     }
   } catch (error) {
     console.log("Error in protectedRoute middleware: ", error);
-    res.status(401).json({ 
+    res.status(401).json({
       success: false,
       errorCode: "INVALID_ACCESS_TOKEN",
-      message: "Unauthorized - Invalid access token" 
+      message: "Unauthorized - Invalid access token",
     });
   }
-}
+};
+
+export const verifiedRoute = async (req, res, next) => {
+  if (req.user?.isVerified) {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      errorCode: "EMAIL_NOT_VERIFIED",
+      message: "Access denied - Please verify your email first",
+    });
+  }
+};
 
 export const adminRoute = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next();
   } else {
-    return res.status(403).json({ 
+    return res.status(403).json({
       success: false,
       errorCode: "ACCESS_DENIED",
-      message: "Access denied - Admin only" });
+      message: "Access denied - Admin only",
+    });
   }
-}
+};

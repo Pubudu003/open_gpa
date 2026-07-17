@@ -101,6 +101,42 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  verifyEmail: async (verificationCode) => {
+    set({ isLoading: true });
+    try {
+      const res = await axiosInstance.post("/verify-email", {
+        verificationCode,
+      });
+      set({ user: res.data.user, isLoading: false });
+      toast.success(res.data.message || "User verified successfully");
+      return { success: true };
+    } catch (error) {
+      const msg = error.response?.data?.message || "Verification failed";
+      toast.error(msg);
+      return { success: false };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  resendVerificationCode: async () => {
+    set({ isLoading: true });
+    try {
+      const res = await axiosInstance.post("/resend-verification-code");
+      toast.success(
+        res.data.message || "Verification code resend to your email",
+      );
+      return { success: true };
+    } catch (error) {
+      const msg =
+        error.response?.data?.message || "Verification code send failed";
+      toast.error(msg);
+      return { success: false };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   // --- User State ---
   setUser: (user) => set({ user }),
 }));

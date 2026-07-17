@@ -15,7 +15,7 @@ const generateTokens = async (userId) => {
   return { accessToken, refreshToken };
 };
 
-const generateVerificationCode = async () => {
+const generateVerificationCode = () => {
   const verificationCode = Math.floor(
     100000 + Math.random() * 900000,
   ).toString();
@@ -24,12 +24,17 @@ const generateVerificationCode = async () => {
 };
 
 const storeVerificationCode = async (userId, verificationCode) => {
-  await redis.set(`verification:${userId}`, verificationCode, "EX", 600); // 10 min
+  try {
+    await redis.set(`verification:${userId}`, verificationCode, "EX", 600); // 10 min
+    return true;
+  } catch (error) {
+    console.log("Verification code storing failed in redis", error);
+    return false;
+  }
 };
 
 const sendVerificationEmail = async (receiver, verificationCode) => {
   try {
-    await transporter.verify();
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: receiver,
@@ -71,6 +76,8 @@ const setCookies = (res, accessToken, refreshToken) => {
 };
 
 export const signup = async (req, res) => {
+  let isEmailSent = false;
+
   try {
     const { userName, email, password } = req.body;
 
@@ -97,13 +104,49 @@ export const signup = async (req, res) => {
     // authenticate
     const { accessToken, refreshToken } = await generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
-
     setCookies(res, accessToken, refreshToken);
 
     // send verification code
-    const { verificationCode } = await generateVerificationCode();
-    await storeVerificationCode(user._id, verificationCode);
-    const isEmailSent = await sendVerificationEmail(email, verificationCode);
+    try {
+      const { verificationCode } = await generateVerificationCode();
+      const isCodeStored = await storeVerificationCode(
+        user._id,
+        verificationCode,
+      );
+
+      if (isCodeStored) {
+        isEmailSent = await sendVerificationEmail(email, verificationCode);
+      } else {
+        return res.status(201).json({
+          success: true,
+          user: {
+            _id: user._id,
+            userName: user.userName,
+            email: user.email,
+            role: user.role,
+          },
+          isEmailSent: false,
+          errorCode: "CODE_NOT_STORED",
+          message:
+            "User created, but verification code storing failed, please try again",
+        });
+      }
+    } catch (error) {
+      console.log("Error in sending verification code", error);
+      return res.status(201).json({
+        success: true,
+        user: {
+          _id: user._id,
+          userName: user.userName,
+          email: user.email,
+          role: user.role,
+        },
+        isEmailSent: false,
+        errorCode: "VERIFICATION_CODE_SENDING_FAILED",
+        message:
+          "User created, but verification code sending failed, please try resend the code",
+      });
+    }
 
     return res.status(201).json({
       success: true,
@@ -271,7 +314,6 @@ export const verifyEmail = async (req, res) => {
   try {
     const { verificationCode } = req.body;
     const userId = req.user._id;
-    const savedVerificationCode = await redis.get(`verification:${userId}`);
 
     if (!verificationCode) {
       return res.status(400).json({
@@ -280,6 +322,8 @@ export const verifyEmail = async (req, res) => {
         message: "Please provide a verification code",
       });
     }
+
+    const savedVerificationCode = await redis.get(`verification:${userId}`);
 
     if (!savedVerificationCode) {
       return res.status(400).json({
@@ -301,13 +345,13 @@ export const verifyEmail = async (req, res) => {
       { _id: userId },
       { $set: { isVerified: true } },
       { returnDocument: "after" },
-    );
+    ).select("-password");
 
     await redis.del(`verification:${userId}`);
 
     return res.status(200).json({
       success: true,
-      verifiedUser,
+      user: verifiedUser,
       message: "User verified successfully",
     });
   } catch (error) {
@@ -333,17 +377,49 @@ export const resendVerificationCode = async (req, res) => {
       });
     }
 
+    // Check if a cooldown is active in redis
+    const cooldownKey = `cooldown:verification:${user._id}`;
+    const isCooldownActive = await redis.get(cooldownKey);
+
+    if (isCooldownActive) {
+      return res.status(429).json({
+        success: false,
+        errorCode: "COOLDOWN_ACTIVE",
+        message: "Pleas wait 60 seconds before requesting another code",
+      });
+    }
+
     // send verification code
     const { verificationCode } = await generateVerificationCode();
-    await storeVerificationCode(user._id, verificationCode);
+    const isCodeStored = await storeVerificationCode(
+      user._id,
+      verificationCode,
+    );
+    if (!isCodeStored) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "CODE_NOT_STORED",
+        message: "Verification code storing failed, please try again",
+      });
+    }
+
     const isEmailSent = await sendVerificationEmail(
       user.email,
       verificationCode,
     );
+    if (!isEmailSent) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "EMAIL_NOT_SENT",
+        message: "Email sending failed, please try again",
+      });
+    }
+
+    // Set the cooldown flag in redis for 60s
+    await redis.set(cooldownKey, "true", "EX", 60);
 
     return res.status(200).json({
       success: true,
-      isEmailSent,
       message: "Verification code sent successfully",
     });
   } catch (error) {
