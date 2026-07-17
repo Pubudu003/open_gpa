@@ -5,6 +5,7 @@ import {
   signup,
   refreshToken,
   verifyEmail,
+  resendVerificationCode,
 } from "../controllers/auth.controller.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
 
@@ -15,5 +16,10 @@ router.post("/signin", signin);
 router.post("/logout", logout);
 router.post("/refresh-token", refreshToken);
 router.post("/verify-email", protectedRoute, verifyEmail);
+router.post(
+  "/resend-verification-code",
+  protectedRoute,
+  resendVerificationCode,
+);
 
 export default router;

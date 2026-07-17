@@ -98,12 +98,12 @@ export const signup = async (req, res) => {
     const { accessToken, refreshToken } = await generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
 
+    setCookies(res, accessToken, refreshToken);
+
     // send verification code
     const { verificationCode } = await generateVerificationCode();
     await storeVerificationCode(user._id, verificationCode);
     const isEmailSent = await sendVerificationEmail(email, verificationCode);
-
-    setCookies(res, accessToken, refreshToken);
 
     return res.status(201).json({
       success: true,
@@ -312,6 +312,42 @@ export const verifyEmail = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in verifyEmail controller: ", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// resend code
+export const resendVerificationCode = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "USER_ALREADY_VERIFIED",
+        message: "User is already verified",
+      });
+    }
+
+    // send verification code
+    const { verificationCode } = await generateVerificationCode();
+    await storeVerificationCode(user._id, verificationCode);
+    const isEmailSent = await sendVerificationEmail(
+      user.email,
+      verificationCode,
+    );
+
+    return res.status(200).json({
+      success: true,
+      isEmailSent,
+      message: "Verification code sent successfully",
+    });
+  } catch (error) {
+    console.log("Error in resendVerificationCode controller: ", error);
     return res.status(500).json({
       success: false,
       errorCode: "CONTROLLER_ERROR",
