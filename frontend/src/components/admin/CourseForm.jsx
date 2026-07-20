@@ -20,7 +20,7 @@ const DegreeMultiSelect = ({ degrees, selected, onToggle }) => {
           {selectedDegrees.map((d) => (
             <span
               key={d._id}
-              className="flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/15 px-2.5 py-1 text-xs font-medium text-sky-400"
+              className="flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/15 px-2.5 py-1 text-xs font-medium text-sky-400"
             >
               <span className="font-semibold uppercase">{d.degreeCode}</span>
               <button
@@ -45,7 +45,7 @@ const DegreeMultiSelect = ({ degrees, selected, onToggle }) => {
       />
 
       {/* degree selecting */}
-      <div className="max-h-30 space-y-1 overflow-y-auto rounded-lg border border-gray-700 bg-gray-800/40 p-2 pr-1">
+      <div className="max-h-30 space-y-1 overflow-y-auto rounded-lg border border-slate-700 bg-slate-800/40 p-2 pr-1">
         {filtered.length === 0 && degrees.length > 0 && (
           <p className="py-3 text-center text-xs text-gray-500">
             No degrees match your search
@@ -59,16 +59,16 @@ const DegreeMultiSelect = ({ degrees, selected, onToggle }) => {
         {filtered.map((d) => (
           <label
             key={d._id}
-            className="flex cursor-pointer items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-gray-700/50"
+            className="flex cursor-pointer items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-slate-700/50"
           >
             <input
               type="checkbox"
               checked={selected.includes(d._id)}
               onChange={() => onToggle(d._id)}
-              className="h-4 w-4 shrink-0 accent-sky-500"
+              className="h-4 w-4 shrink-0 accent-blue-500"
             />
             <span className="text-sm text-gray-200">
-              <span className="text-xs font-medium text-sky-400 uppercase">
+              <span className="text-xs font-medium text-blue-400 uppercase">
                 {d.degreeCode}
               </span>{" "}
               {d.degreeName}
@@ -207,7 +207,7 @@ const CourseForm = ({
       <button
         type="submit"
         disabled={isLoading || form.degree.length === 0}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-sky-600 to-violet-600 py-2.5 text-sm font-semibold text-white transition-all hover:from-sky-500 hover:to-violet-500 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 disabled:opacity-60 disabled:hover:bg-blue-600"
       >
         {isLoading ? (
           <Loader2 size={16} className="animate-spin" />

@@ -212,7 +212,7 @@ const CoursesTab = () => {
 
         <button
           onClick={() => setModal("add")}
-          className="flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-500"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
         >
           <Plus size={16} /> Add Course
         </button>
@@ -220,7 +220,7 @@ const CoursesTab = () => {
 
       {/* Filter / Searchbar */}
       {!loading && courses.length > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-gray-700/60 bg-gray-800/50 p-3">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-800/50 p-3">
           {/* Search */}
           <div className="relative min-w-[180px] flex-1">
             <Search
@@ -235,7 +235,7 @@ const CoursesTab = () => {
                 setCourseSearch(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2 pr-3 pl-8 text-xs text-white placeholder-gray-500 transition-all hover:bg-gray-800/70 focus:border-sky-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 py-2 pr-3 pl-8 text-xs text-white placeholder-gray-500 transition-all hover:bg-slate-800/70 focus:border-blue-500 focus:outline-none"
             />
           </div>
 
@@ -338,16 +338,16 @@ const CoursesTab = () => {
           </p>
           <button
             onClick={clearFilter}
-            className="mt-3 cursor-pointer text-sm text-sky-400 transition-colors hover:text-sky-300"
+            className="mt-3 cursor-pointer text-sm text-blue-400 transition-colors hover:text-blue-300"
           >
             Clear filters
           </button>
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-xl border border-gray-700">
+          <div className="overflow-hidden rounded-xl border border-slate-700">
             <table className="w-full text-sm">
-              <thead className="bg-gray-800/80">
+              <thead className="bg-slate-800/80">
                 <tr>
                   {[
                     "code",
@@ -367,13 +367,13 @@ const CoursesTab = () => {
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-slate-700/50">
                 {pagedCourses.map((c) => (
                   <tr
                     key={c._id}
-                    className="transition-colors hover:bg-gray-800/40"
+                    className="transition-colors hover:bg-slate-800/40"
                   >
-                    <td className="px-4 py-3.5 font-mono font-medium text-sky-400 uppercase">
+                    <td className="px-4 py-3.5 font-mono font-medium text-blue-400 uppercase">
                       {c.courseCode}
                     </td>
                     <td className="max-w-50 px-4 py-3.5 font-medium text-white">
@@ -383,12 +383,12 @@ const CoursesTab = () => {
                       {c.courseCredit}
                     </td>
                     <td className="px-4 py-3.5">
-                      <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
+                      <span className="rounded bg-slate-800 px-2 py-0.5 text-xs text-gray-300">
                         L{c.level}
                       </span>
                     </td>
                     <td className="px-4 py-3.5">
-                      <span className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">
+                      <span className="rounded bg-slate-800 px-2 py-0.5 text-xs text-gray-300">
                         S{c.semester}
                       </span>
                     </td>
@@ -399,7 +399,7 @@ const CoursesTab = () => {
                       <div className="flex items-center justify-end gap-2 text-gray-400">
                         <button
                           onClick={() => setModal({ edit: c })}
-                          className="rounded-lg p-1.5 transition-colors hover:bg-sky-400/10 hover:text-sky-400"
+                          className="rounded-lg p-1.5 transition-colors hover:bg-blue-400/10 hover:text-blue-400"
                         >
                           <Pencil size={15} />
                         </button>
@@ -424,7 +424,7 @@ const CoursesTab = () => {
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 First
               </button>
@@ -432,7 +432,7 @@ const CoursesTab = () => {
               <button
                 onClick={() => setCurrentPage((p) => p - 1)}
                 disabled={currentPage === 1}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Prev
               </button>
@@ -451,8 +451,8 @@ const CoursesTab = () => {
                     onClick={() => setCurrentPage(item)}
                     className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                       currentPage === item
-                        ? "border-sky-500 bg-sky-600 text-white"
-                        : "border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        ? "border-blue-500 bg-blue-600 text-white"
+                        : "border-slate-700 bg-slate-800 text-gray-300 hover:bg-slate-700"
                     }`}
                   >
                     {item}
@@ -463,7 +463,7 @@ const CoursesTab = () => {
               <button
                 onClick={() => setCurrentPage((p) => p + 1)}
                 disabled={currentPage === totalPages}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next
               </button>
@@ -471,7 +471,7 @@ const CoursesTab = () => {
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Last
               </button>

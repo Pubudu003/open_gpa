@@ -17,14 +17,14 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
           {/* Modal box */}
           <Motion.div
-            className="relative z-10 w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl"
+            className="relative z-10 w-full max-w-lg rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-700 p-6">
+            <div className="flex items-center justify-between border-b border-slate-700 p-6">
               <h2 className="text-xl font-semibold text-white">{title}</h2>
               <button
                 className="cursor-pointer rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-400/10 hover:text-red-400"
