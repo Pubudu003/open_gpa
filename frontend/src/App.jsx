@@ -68,7 +68,7 @@ function App() {
   //const hideFooter = ["/signin", "/signup"].includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-slate-950">
       <Toaster
         position="top-right"
         toastOptions={{

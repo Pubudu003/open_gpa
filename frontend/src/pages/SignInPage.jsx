@@ -40,8 +40,8 @@ const SignInPage = () => {
       </Link>
 
       {/* --- Background glow */}
-      <div className="pointer-events-none absolute top-1/2 right-1/3 h-[400px] w-[400px] rounded-full bg-sky-600/20 blur-[120px]"></div>
-      <div className="pointer-events-none absolute top-0 left-1/3 h-[400px] w-[300px] rounded-full bg-violet-600/30 blur-[120px]"></div>
+      <div className="pointer-events-none absolute top-1/2 right-1/3 h-[400px] w-[400px] rounded-full bg-blue-600/20 blur-[120px]"></div>
+      <div className="pointer-events-none absolute top-0 left-1/3 h-[400px] w-[300px] rounded-full bg-zinc-300/20 blur-[120px]"></div>
 
       <Motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -51,7 +51,7 @@ const SignInPage = () => {
       >
         {/* --- Logo ---*/}
         <div className="mb-8 flex flex-col items-center">
-          <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 to-sky-500 p-2 shadow-lg shadow-violet-500/30">
+          <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 p-2 shadow-lg shadow-blue-400/30">
             <GraduationCap size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold">Welcome back</h1>
@@ -77,7 +77,7 @@ const SignInPage = () => {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="you@example.com"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ const SignInPage = () => {
                     setForm({ ...form, password: e.target.value })
                   }
                   placeholder="••••••••"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
                 />
                 <button
                   type="button"
@@ -115,9 +115,9 @@ const SignInPage = () => {
 
             {/* --- Submit Button --- */}
             <Button
-              variant="primary2"
+              variant="primary"
               type="submit"
-              className="flex w-full items-center justify-center shadow-lg shadow-violet-900/40"
+              className="flex w-full items-center justify-center shadow-lg shadow-blue-900/40"
             >
               {isLoading ? (
                 <Loader size={20} className="animate-spin" />
@@ -131,7 +131,7 @@ const SignInPage = () => {
             Don't have an account?{" "}
             <Link
               to={"/signup"}
-              className="font-medium text-violet-400 transition-colors hover:text-sky-300"
+              className="font-medium text-blue-400 transition-colors hover:text-sky-300"
             >
               Sign up
             </Link>
