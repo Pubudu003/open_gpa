@@ -48,8 +48,8 @@ const SignUpPage = () => {
       </Link>
 
       {/* --- Background glow */}
-      <div className="pointer-events-none absolute top-0 right-1/3 h-[300px] w-[500px] rounded-full bg-sky-600/20 blur-[120px]"></div>
-      <div className="pointer-events-none absolute bottom-0 left-1/4 h-[400px] w-[200px] rounded-full bg-violet-600/30 blur-[120px]"></div>
+      <div className="pointer-events-none absolute top-0 right-1/3 h-[300px] w-[500px] rounded-full bg-zinc-500/20 blur-[120px]"></div>
+      <div className="pointer-events-none absolute bottom-0 left-1/4 h-[400px] w-[200px] rounded-full bg-blue-600/30 blur-[120px]"></div>
 
       <Motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -59,7 +59,7 @@ const SignUpPage = () => {
       >
         {/* --- Logo ---*/}
         <div className="mb-8 flex flex-col items-center">
-          <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-sky-500 to-violet-600 p-2 shadow-lg shadow-sky-500/30">
+          <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 p-2 shadow-lg shadow-sky-500/30">
             <GraduationCap size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold">Create account</h1>
@@ -87,7 +87,7 @@ const SignUpPage = () => {
                     setForm({ ...form, userName: e.target.value })
                   }
                   placeholder="John Doe"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
               </div>
             </div>
@@ -108,7 +108,7 @@ const SignUpPage = () => {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="you@example.com"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ const SignUpPage = () => {
                     setForm({ ...form, password: e.target.value })
                   }
                   placeholder="Min. 8 characters"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
                 <button
                   type="button"
@@ -166,7 +166,7 @@ const SignUpPage = () => {
                     setForm({ ...form, confirmPassword: e.target.value })
                   }
                   placeholder="Min. 8 characters"
-                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                  className="focus: w-full rounded-lg border border-gray-600 bg-gray-800/60 py-3 pr-4 pl-10 text-white placeholder-gray-500 transition-all outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
                 <button
                   type="button"
@@ -203,7 +203,7 @@ const SignUpPage = () => {
             Already have an account?{" "}
             <Link
               to={"/signin"}
-              className="font-medium text-sky-400 transition-colors hover:text-violet-300"
+              className="font-medium text-teal-500 transition-colors hover:text-teal-400"
             >
               Sign in
             </Link>

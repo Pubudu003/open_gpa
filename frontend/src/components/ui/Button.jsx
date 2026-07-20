@@ -9,7 +9,7 @@ export const Button = ({
 
   const variants = {
     primary:
-      "bg-gradient-to-r from-sky-600 to-violet-600 text-white hover:from-sky-500 hover:to-violet-500",
+      "bg-blue-600 text-white hover:bg-blue-500 shadow-md hover:shadow-blue-300/30 hover:text-gray-100",
     primary2:
       "bg-gradient-to-r from-violet-600 to-sky-600 text-white hover:from-violet-500 hover:to-sky-500",
     secondary:
