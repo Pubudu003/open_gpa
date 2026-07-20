@@ -123,7 +123,7 @@ const DegreesTab = () => {
           <p className="mt-0.5 text-sm text-gray-400">
             {isFiltered ? (
               <>
-                <span className="font-medium text-sky-400">
+                <span className="font-medium text-blue-400">
                   {filteredDegrees.length}
                 </span>{" "}
                 of {degrees.length} degree
@@ -140,7 +140,7 @@ const DegreesTab = () => {
 
         <button
           onClick={() => setModal("add")}
-          className="flex cursor-pointer items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-500"
+          className="flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
         >
           <Plus size={16} /> Add Degree
         </button>
@@ -148,7 +148,7 @@ const DegreesTab = () => {
 
       {/* --- Filter / Search bar */}
       {!loading && degrees.length > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-gray-700/60 bg-gray-800/50 p-3">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-800/50 p-3">
           {/* Search */}
           <div className="relative min-w-[180px] flex-1">
             <Search
@@ -160,7 +160,7 @@ const DegreesTab = () => {
               value={degreeSearch}
               placeholder="Search by code or name.."
               onChange={(e) => setDegreeSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2 pr-3 pl-8 text-xs text-white placeholder-gray-500 transition-all hover:bg-gray-800/70 focus:border-sky-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 py-2 pr-3 pl-8 text-xs text-white placeholder-gray-500 transition-all hover:bg-slate-800/70 focus:border-blue-500 focus:outline-none"
             />
           </div>
 
@@ -237,15 +237,15 @@ const DegreesTab = () => {
           </p>
           <button
             onClick={clearFilters}
-            className="mt-3 cursor-pointer text-sm text-sky-400 transition-colors hover:text-sky-300"
+            className="mt-3 cursor-pointer text-sm text-blue-400 transition-colors hover:text-blue-300"
           >
             Clear filters
           </button>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-700">
+        <div className="overflow-hidden rounded-xl border border-slate-700">
           <table className="w-full text-sm">
-            <thead className="bg-gray-800/80">
+            <thead className="bg-slate-800/80">
               <tr>
                 {["code", "name", "type", "faculty", "department", ""].map(
                   (h) => (
@@ -259,13 +259,13 @@ const DegreesTab = () => {
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-700/50">
+            <tbody className="divide-y divide-slate-700/50">
               {filteredDegrees.map((d) => (
                 <tr
                   key={d._id}
-                  className="transition-colors hover:bg-gray-800/40"
+                  className="transition-colors hover:bg-slate-800/40"
                 >
-                  <td className="px-4 py-3.5 font-mono font-medium text-sky-400 uppercase">
+                  <td className="px-4 py-3.5 font-mono font-medium text-blue-400 uppercase">
                     {d.degreeCode}
                   </td>
                   <td className="max-w-50 px-4 py-3.5 font-medium text-white">
@@ -275,12 +275,12 @@ const DegreesTab = () => {
                     <span
                       className={`${
                         d.degreeType?.toLowerCase() === "special"
-                          ? "bg-violet-500/15 text-violet-400"
+                          ? "bg-teal-500/15 text-teal-400"
                           : d.degreeType?.toLowerCase() === "general"
-                            ? "bg-sky-500/15 text-sky-400"
+                            ? "bg-blue-500/15 text-blue-400"
                             : d.degreeType?.toLowerCase() === "masters"
-                              ? "bg-teal-500/15 text-teal-400"
-                              : "bg-gray-500/15 text-gray-400"
+                              ? "bg-violet-500/15 text-violet-400"
+                              : "bg-slate-500/15 text-slate-400"
                       } rounded-full px-2.5 py-1 text-xs font-medium`}
                     >
                       {d.degreeType}
@@ -292,7 +292,7 @@ const DegreesTab = () => {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => setModal({ edit: d })}
-                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-sky-400/10 hover:text-sky-400"
+                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-sky-400/10 hover:text-blue-400"
                       >
                         <Pencil size={15} />
                       </button>
