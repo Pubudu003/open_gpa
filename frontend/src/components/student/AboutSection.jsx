@@ -113,7 +113,7 @@ const AboutSection = () => {
                     </span>
                   ))}
                 </div>
-                <p className="text-sm text-gray-400">
+                <p className="text-justify text-sm leading-relaxed text-gray-400">
                   Passionate Web developer, Backend Engineer, Full Stack
                   Engineer building practical Software and Web Solutions. This
                   project was built to help university students of The Open
