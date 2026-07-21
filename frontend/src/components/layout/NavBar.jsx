@@ -10,7 +10,7 @@ const NavBar = () => {
       <div className="mx-auto max-w-6xl px-6 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 py-2 transition-transform duration-300 sm:h-16 sm:flex-row">
           <Link to={"/"} className="flex items-center space-x-2">
-            <div className="rounded-lg bg-gradient-to-br from-sky-500 to-violet-600 p-2">
+            <div className="rounded-lg bg-blue-600 p-2">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-bold text-slate-300">OPEN GPA</span>

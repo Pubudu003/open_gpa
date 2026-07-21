@@ -7,8 +7,8 @@ const AboutSection = () => {
   const SKILL_TAGS = [
     {
       label: "BSc IT Honours",
-      textColor: "text-sky-400/80",
-      backColor: "bg-sky-500/20",
+      textColor: "text-blue-400/80",
+      backColor: "bg-blue-500/20",
     },
     {
       label: "Backend Engineer",
@@ -91,11 +91,11 @@ const AboutSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col items-center gap-4 rounded-2xl border border-gray-700 bg-gray-900 p-6 md:flex-row">
+            <div className="flex flex-col items-center gap-4 rounded-2xl border border-slate-700 bg-slate-900 p-6 md:flex-row">
               {/* Profile Image */}
-              <div className="h-32 w-32 overflow-hidden rounded-full">
+              <div className="h-32 w-32 overflow-hidden rounded-full border-2 border-white">
                 <img
-                  src="/sample_prop_image.jpg"
+                  src="/pp2.png"
                   alt="Pubudu Lakshan - Developer"
                   className="h-full w-full object-cover"
                 />
@@ -113,7 +113,7 @@ const AboutSection = () => {
                     </span>
                   ))}
                 </div>
-                <p className="text-sm text-gray-400">
+                <p className="text-justify text-sm leading-relaxed text-gray-400">
                   Passionate Web developer, Backend Engineer, Full Stack
                   Engineer building practical Software and Web Solutions. This
                   project was built to help university students of The Open
@@ -134,9 +134,9 @@ const AboutSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="space-y-3 rounded-2xl border border-gray-700 bg-gray-900 p-6">
+            <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900 p-6">
               <div className="flex items-center gap-2">
-                <CodeXml size={24} className="text-sky-400" />
+                <CodeXml size={24} className="text-blue-400" />
                 <h3 className="text-lg font-semibold">
                   Technologies Used in This Project
                 </h3>
@@ -145,7 +145,7 @@ const AboutSection = () => {
                 {TECH_STACK.map(({ label, name, color, borderColor }) => (
                   <div
                     key={name}
-                    className="flex items-center gap-4 rounded-xl border border-gray-700 bg-gray-800/50 p-2"
+                    className="flex items-center gap-4 rounded-xl border border-slate-700 bg-slate-800/50 p-2"
                   >
                     <div
                       className={`h-6 w-6 ${color} border-2 ${borderColor} ml-1 flex items-center justify-center rounded-full`}
@@ -177,7 +177,7 @@ const AboutSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className="space-y-3 rounded-2xl border border-gray-700 bg-gray-900 p-6">
+            <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900 p-6">
               <div className="flex items-center gap-2">
                 <TrendingUp size={24} className="text-emerald-400" />
                 <h3 className="text-lg font-semibold">
@@ -186,7 +186,7 @@ const AboutSection = () => {
               </div>
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* General GPA */}
-                <div className="space-y-2 rounded-md rounded-t-md border border-t-4 border-gray-700 border-t-sky-500 bg-gray-800/30 p-4">
+                <div className="space-y-2 rounded-md rounded-t-md border border-t-4 border-slate-700 border-t-blue-500 bg-slate-800/30 p-4">
                   <h4 className="mb-2 font-semibold">General Degree GPA</h4>
                   <p className="mb-4 text-xs text-gray-400">
                     Calculated as a standard credit-weighted average for all
@@ -220,7 +220,7 @@ const AboutSection = () => {
                   </div>
                 </div>
                 {/* Special GPA */}
-                <div className="space-y-2 rounded-md rounded-t-md border border-t-4 border-gray-700 border-t-violet-500 bg-gray-800/30 p-4">
+                <div className="space-y-2 rounded-md rounded-t-md border border-t-4 border-slate-700 border-t-violet-500 bg-slate-800/30 p-4">
                   <h4 className="mb-2 font-semibold">
                     Special / Honours Degree GPA
                   </h4>

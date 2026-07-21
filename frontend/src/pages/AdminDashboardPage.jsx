@@ -17,13 +17,13 @@ const AdminDashboardPage = () => {
   const [activeTab, setActiveTab] = useState("degrees");
 
   return (
-    <div className="flex min-h-screen bg-gray-950 text-white">
+    <div className="flex min-h-screen bg-slate-950 text-white">
       {/* Sidebar */}
-      <aside className="fixed top-0 left-0 flex min-h-screen w-64 flex-col border-r border-gray-700/50 bg-gray-900">
+      <aside className="fixed top-0 left-0 flex min-h-screen w-64 flex-col border-r border-slate-700/50 bg-slate-900">
         {/* Brand */}
         <div className="border-b border-gray-700/50 px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-violet-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600">
               <GraduationCap size={20} className="text-white" />
             </div>
             <div>
@@ -41,7 +41,7 @@ const AdminDashboardPage = () => {
               onClick={() => setActiveTab(id)}
               className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                 activeTab === id
-                  ? "bg-sky-500/15 text-sky-400"
+                  ? "bg-blue-500/15 text-blue-400"
                   : "text-gray-400 hover:bg-gray-800 hover:text-white"
               }`}
             >
@@ -54,7 +54,7 @@ const AdminDashboardPage = () => {
         {/* User + logout */}
         <div className="border-t border-gray-700/50 px-4 py-5">
           <div className="mb-3 flex items-center gap-3 px-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sky-600 to-violet-600 text-sm font-bold text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
               {user?.userName?.[0]?.toUpperCase() || "A"}
             </div>
             <div className="min-w-0">

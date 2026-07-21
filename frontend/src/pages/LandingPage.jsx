@@ -27,21 +27,21 @@ const STATS = [
 const FEATURES = [
   {
     icon: TrendingUp,
-    color: "from-sky-500 to-blue-600",
-    glow: "bg-sky-500/10 border-sky-500/20",
+    color: "from-blue-500 to-blue-700",
+    glow: "bg-blue-500/20 border-sky-500/20",
     title: "Real-Time GPA Tracking",
     desc: "Instantly see your GPA recalculate as you assign grades. Visual feedback keeps you motivated and on track.",
   },
   {
     icon: BookOpen,
-    color: "from-violet-500 to-purple-600",
-    glow: "bg-violet-500/10 border-violet-500/20",
+    color: "from-indigo-500 to-indigo-700",
+    glow: "bg-indigo-500/10 border-indigo-500/20",
     title: "Smart Course Management",
     desc: "Browse all courses available for your enrolled degree, filter by level, semester, or credit value, and build your academic plan.",
   },
   {
     icon: Shield,
-    color: "from-emerald-500 to-teal-600",
+    color: "from-emerald-500 to-emerald-700",
     glow: "bg-emerald-500/10 border-emerald-500/20",
     title: "Role-Based Access",
     desc: "Admins manage degrees & courses. Students manage their own study plan. Secure, separate experiences for each role.",
@@ -99,7 +99,7 @@ const LandingPage = () => {
     <div className="min-h-screen overflow-x-hidden text-white">
       {/* --- Navbar ---*/}
       <header
-        className={`fixed top-0 right-0 left-0 z-50 border-b border-gray-800/60 bg-gray-950/50 backdrop-blur-md transition-transform duration-300 ${showNavBtns ? "translate-y-0" : "-translate-y-full"}`}
+        className={`border-zinc-indigo/60 fixed top-0 right-0 left-0 z-50 border-b border-blue-600/20 bg-slate-950/50 backdrop-blur-md transition-transform duration-300 ${showNavBtns ? "translate-y-0" : "-translate-y-full"}`}
       >
         <NavBar />
       </header>
@@ -107,8 +107,8 @@ const LandingPage = () => {
       {/* --- Hero --- */}
       <section className="relative overflow-hidden px-6 pt-32 pb-28">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-1/4 left-1/2 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-sky-600/10 blur-3xl" />
-          <div className="absolute top-1/3 left-1/4 h-[300px] w-[300px] rounded-full bg-violet-600/10 blur-3xl" />
+          <div className="absolute top-1/4 left-1/2 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-blue-300/10 blur-3xl" />
+          <div className="absolute top-1/3 left-1/4 h-[300px] w-[300px] rounded-full bg-blue-600/20 blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-4xl text-center">
@@ -116,7 +116,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-500/25 bg-sky-500/10 px-3.5 py-1.5 text-xs font-medium text-sky-400"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200/25 bg-slate-300/10 px-3.5 py-1.5 text-xs font-medium text-slate-400"
           >
             <Star size={12} />
             Student GPA & Course Tracker
@@ -129,7 +129,7 @@ const LandingPage = () => {
             className="mb-6 text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl md:text-6xl"
           >
             Track Your{" "}
-            <span className="bg-gradient-to-r from-sky-400 to-violet-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-300 to-blue-600 bg-clip-text text-transparent">
               Academic Progress
             </span>{" "}
             Effortlessly
@@ -158,7 +158,7 @@ const LandingPage = () => {
             <Link to={"/signup"} className="w-full sm:w-auto">
               <Button
                 variant="primary"
-                className="group inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 shadow-lg shadow-sky-500/20"
+                className="group inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 shadow-lg shadow-indigo-500/20"
               >
                 Start Tracking Free
                 <ArrowRight
@@ -189,8 +189,8 @@ const LandingPage = () => {
           >
             {STATS.map(({ icon: Icon, value, label }) => (
               <div key={label} className="flex items-center gap-4 text-left">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800">
-                  <Icon size={18} className="text-sky-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800">
+                  <Icon size={18} className="text-blue-300" />
                 </div>
                 <div>
                   <p className="text-lg leading-none font-bold text-white">
@@ -208,7 +208,7 @@ const LandingPage = () => {
       <section className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <Motion.div {...fadeup} className="mb-14 text-center">
-            <p className="mb-3 text-sm font-semibold tracking-widest text-sky-400 uppercase">
+            <p className="mb-3 text-sm font-semibold tracking-widest text-blue-400 uppercase">
               FEATURES
             </p>
             <h2 className="text-3xl font-bold text-white md:text-4xl">
@@ -247,7 +247,7 @@ const LandingPage = () => {
       <section className="bg-gray-900/40 px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <Motion.div {...fadeup} className="mb-14 text-center">
-            <p className="mb-3 font-medium tracking-widest text-violet-400">
+            <p className="mb-3 font-medium tracking-widest text-blue-400">
               HOW IT WORKS
             </p>
             <h2 className="text-3xl font-bold text-white md:text-4xl">
@@ -281,9 +281,9 @@ const LandingPage = () => {
         <Motion.div
           {...fadeup}
           transition={{ duration: 0.5 }}
-          className="mx-auto max-w-3xl rounded-3xl border border-sky-900 bg-gradient-to-br from-sky-600/20 to-violet-600/20 py-12 text-center"
+          className="mx-auto max-w-3xl rounded-3xl border border-blue-400 bg-gradient-to-br from-blue-600/20 to-zinc-900/40 py-12 text-center"
         >
-          <GraduationCap className="mx-auto mb-3 h-16 w-16 text-sky-400" />
+          <GraduationCap className="mx-auto mb-3 h-16 w-16 text-blue-400" />
           <h3 className="mb-3 text-3xl font-bold text-white">
             Ready to take control of your GPA?
           </h3>

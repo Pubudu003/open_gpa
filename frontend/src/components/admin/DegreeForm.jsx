@@ -77,7 +77,7 @@ const DegreeForm = ({ initial = DEGREE_DEFAULTS, onSubmit, isLoading }) => {
       <button
         type="submit"
         disabled={isLoading}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-sky-600 to-violet-600 py-2.5 text-sm font-semibold text-white transition-all hover:from-sky-500 hover:to-violet-500 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 disabled:opacity-60"
       >
         {isLoading ? (
           <Loader2 size={12} className="animate-spin" />
