@@ -43,7 +43,7 @@ const DegreeSearchPicker = ({
   return (
     <div ref={wrapperRef} className="relative">
       <div
-        className="flex w-full cursor-pointer items-center gap-2 rounded-lg border border-gray-600 bg-gray-800 px-4 py-2.5 transition-all focus-within:border-sky-500"
+        className="flex w-full cursor-pointer items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 transition-all focus-within:border-sky-500"
         onClick={() => setOpen((o) => !o)}
       >
         <Search size={15} className="shrink-0 text-gray-500" />
@@ -83,17 +83,17 @@ const DegreeSearchPicker = ({
                     key={d._id}
                     type="button"
                     onClick={() => handleSelect(d)}
-                    className={`w-full border-b border-gray-700/50 px-4 py-3 text-left transition-colors last:border-0 hover:bg-gray-700/70 ${selectedId === d._id ? "bg-sky-500/10" : ""}`}
+                    className={`w-full border-b border-slate-700/50 px-4 py-3 text-left transition-colors last:border-0 ${selectedId === d._id ? "bg-blue-500/20 hover:bg-blue-500/30" : "hover:bg-slate-800/70"}`}
                   >
                     <div className="flex items-center gap-2">
-                      <span className="shrink-0 font-mono text-xs font-bold text-sky-400 uppercase">
+                      <span className="shrink-0 font-mono text-xs font-bold text-blue-400 uppercase">
                         {d.degreeCode}
                       </span>
                       <span className="text-sm text-white">{d.degreeName}</span>
                       {selectedId === d._id && (
                         <Check
-                          size={13}
-                          className="ml-auto shrink-0 text-sky-400"
+                          size={14}
+                          className="ml-auto shrink-0 text-blue-400"
                         />
                       )}
                     </div>

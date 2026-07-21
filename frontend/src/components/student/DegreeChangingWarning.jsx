@@ -7,7 +7,7 @@ const DegreeChangingWarning = ({ onConfirm, onCancel }) => (
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-      className="w-full max-w-md rounded-2xl border border-yellow-500/30 bg-gray-900 p-6 shadow-2xl"
+      className="w-full max-w-md rounded-2xl border border-yellow-500/30 bg-slate-900 p-6 shadow-2xl"
     >
       <div className="flex flex-col items-center gap-4 text-center">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-500/10">
@@ -27,13 +27,13 @@ const DegreeChangingWarning = ({ onConfirm, onCancel }) => (
         <div className="flex w-full gap-3 pt-1">
           <button
             onClick={onCancel}
-            className="flex-1 rounded-lg border border-gray-600 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800"
+            className="flex-1 rounded-lg border border-slate-600 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-slate-800"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 rounded-lg border bg-yellow-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-yellow-500"
+            className="flex-1 rounded-lg border border-yellow-200 bg-yellow-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-yellow-500"
           >
             Yes, Change Degree
           </button>
