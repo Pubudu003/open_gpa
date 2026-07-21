@@ -121,7 +121,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
     <div className="space-y-5">
       {/* Filter bar */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 rounded-lg border border-gray-600 bg-gray-800 px-4 py-2.5 transition-all focus-within:border-sky-500">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 transition-all focus-within:border-blue-500">
           <Search size={15} className="shrink-0 text-gray-500" />
           <input
             type="text"
@@ -144,7 +144,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
           <select
             value={filterLevel}
             onChange={(e) => setFilterLevel(e.target.value)}
-            className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+            className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
           >
             <option value="all">All Levels</option>
             {["3", "4", "5", "6"].map((l) => (
@@ -156,7 +156,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
           <select
             value={filterSemester}
             onChange={(e) => setFilterSemester(e.target.value)}
-            className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+            className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
           >
             <option value="all">All Semesters</option>
             <option value="1">Semester 1</option>
@@ -165,7 +165,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
           <select
             value={filterCredit}
             onChange={(e) => setFilterCredit(e.target.value)}
-            className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+            className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
           >
             <option value="all">All Credits</option>
             {availableCredits.map((c) => (
@@ -190,14 +190,14 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
 
       {/* Course display */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-700 bg-gray-900 py-16 text-center">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 py-16 text-center">
           <Search size={36} className="mb-3 text-gray-600" />
           <p className="font-medium text-gray-400">
             No courses match your filters
           </p>
           <button
             onClick={resetFilter}
-            className="mt-3 text-sm text-sky-400 hover:underline"
+            className="mt-3 text-sm text-blue-400 hover:underline"
           >
             Clear filters
           </button>
@@ -219,18 +219,18 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                         key={c._id}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="rounded-xl border border-gray-700 bg-gray-900 p-4 transition-all hover:border-gray-600"
+                        className="rounded-xl border border-slate-700 bg-slate-900 p-4 transition-all hover:border-slate-600"
                       >
                         <div className="flex justify-between gap-2">
                           <div>
                             <div className="mb-1 flex items-center gap-2">
-                              <span className="font-mono text-xs font-semibold text-sky-400 uppercase">
+                              <span className="font-mono text-xs font-semibold text-blue-400 uppercase">
                                 {c.courseCode}
                               </span>
-                              <span className="rounded bg-gray-700 px-1.5 py-0.5 text-xs text-gray-400">
+                              <span className="rounded bg-slate-700 px-1.5 py-0.5 text-xs text-gray-400">
                                 {c.courseCredit} Credits
                               </span>
-                              <span className="rounded bg-gray-700/50 px-1.5 py-0.5 text-xs text-gray-500">
+                              <span className="rounded bg-slate-700/50 px-1.5 py-0.5 text-xs text-gray-500">
                                 Level {c.level}
                               </span>
                             </div>
@@ -256,7 +256,7 @@ const BrowseCourseSection = ({ selectedCourseIds, onCourseAdded }) => {
                               className={`flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${
                                 isAdded
                                   ? "cursor-default bg-emerald-500/15 text-emerald-400"
-                                  : "bg-sky-600 text-white hover:bg-sky-500"
+                                  : "bg-blue-600 text-white hover:bg-blue-500"
                               }`}
                             >
                               {adding === c._id ? (

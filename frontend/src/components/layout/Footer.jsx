@@ -21,7 +21,7 @@ const SOCIALS = [
 const Footer = () => {
   return (
     <footer className="relative border-t border-gray-800/60 bg-gray-950 px-6 py-12 text-gray-400">
-      <div className="pointer-events-none absolute top-0 left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
+      <div className="pointer-events-none absolute top-0 left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           {/* --- About Section --- */}

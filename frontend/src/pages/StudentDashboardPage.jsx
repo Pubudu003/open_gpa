@@ -72,7 +72,7 @@ const StudentDashboardPage = () => {
   }, [getProfile]);
 
   return (
-    <div className="flex min-h-screen bg-gray-950">
+    <div className="flex min-h-screen bg-slate-950">
       {/* Sidebar */}
       {/* Mobile Sidebar backdrop Overlay */}
       {sidebarOpen && (
@@ -82,14 +82,14 @@ const StudentDashboardPage = () => {
         />
       )}
       <aside
-        className={`fixed top-0 left-0 z-40 flex min-h-screen w-64 flex-col border-r border-gray-700/50 bg-gray-900 transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed top-0 left-0 z-40 flex min-h-screen w-64 flex-col border-r border-slate-700/50 bg-slate-900 transition-transform duration-300 md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Brand */}
-        <div className="border-b border-gray-700/50 px-6 py-6">
+        <div className="border-b border-slate-700/50 px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-sky-500 to-violet-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600">
               <GraduationCap size={20} className="text-white" />
             </div>
             <div>
@@ -101,7 +101,7 @@ const StudentDashboardPage = () => {
 
         {/* GPA */}
         {user.gpa != null && (
-          <div className="mx-4 mt-4 rounded-xl border border-sky-500/20 bg-linear-to-br from-sky-600/20 to-violet-600/20 px-4 py-3">
+          <div className="mx-4 mt-4 rounded-xl border border-blue-400/20 bg-linear-to-br from-blue-400/20 to-blue-600/20 px-4 py-3">
             <p className="mb-0.5 text-xs text-gray-400">Your GPA</p>
             <p className="text-2xl font-bold text-white">
               {(user.gpa ?? 0).toFixed(2)}
@@ -120,8 +120,8 @@ const StudentDashboardPage = () => {
               onClick={() => handleNavigation(id)}
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                 activeTab === id
-                  ? "bg-sky-500/15 text-sky-400"
-                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                  ? "bg-blue-500/15 text-blue-400"
+                  : "text-gray-400 hover:bg-slate-800 hover:text-white"
               }`}
             >
               <Icon size={18} />
@@ -133,7 +133,7 @@ const StudentDashboardPage = () => {
         {/* User + Logout */}
         <div className="border-t border-gray-700/50 px-4 py-5">
           <div className="mb-3 flex items-center gap-3 px-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-sky-600 to-violet-600 text-sm font-bold text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-sky-600 to-blue-600 text-sm font-bold text-white">
               {user?.userName?.[0]?.toUpperCase() || "S"}
             </div>
             <div className="min-w-0">
@@ -147,7 +147,7 @@ const StudentDashboardPage = () => {
           </div>
           <button
             onClick={logout}
-            className="flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-400 transition-all hover:bg-red-400/10 hover:text-red-400"
+            className="mb-12 flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-400 transition-all hover:bg-red-400/10 hover:text-red-400"
           >
             <LogOut size={16} />
             Sign Out
@@ -158,15 +158,15 @@ const StudentDashboardPage = () => {
       {/* Main Content Wrapper */}
       <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         {/* Mobile Sticky Header (Hidden on Desktop) */}
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-800 bg-gray-900 px-4 py-3 md:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-slate-800 bg-slate-900 px-4 py-3 md:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-slate-800 hover:text-white"
           >
             <Menu size={20} />
           </button>
           <span className="text-sm font-bold text-white">OPEN GPA</span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-sky-500 to-violet-600 text-xs font-bold text-white uppercase">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-blue-700 text-xs font-bold text-white uppercase">
             {user?.userName?.[0] || "S"}
           </div>
         </header>

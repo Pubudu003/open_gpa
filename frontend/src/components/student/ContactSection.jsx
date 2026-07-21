@@ -84,9 +84,9 @@ const ContactSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="space-y-3 rounded-2xl border border-gray-700 bg-gray-900 p-6">
+            <div className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900 p-6">
               <div className="flex items-center gap-2">
-                <Mail size={24} className="text-sky-400" />
+                <Mail size={24} className="text-blue-400" />
                 <h3 className="text-lg font-semibold">Get In Touch</h3>
               </div>
               <div className="flex flex-col gap-2">
@@ -95,7 +95,7 @@ const ContactSection = () => {
                     return (
                       <div key={label} className="flex flex-col gap-2">
                         <button
-                          className={`rounded-md rounded-l-md border border-l-4 border-gray-700 md:grid md:grid-cols-[120px_1fr_auto] ${borderColor} cursor-pointer bg-gray-600/30 px-4 py-2 hover:bg-gray-600/50`}
+                          className={`rounded-md rounded-l-md border border-l-4 border-slate-700 md:grid md:grid-cols-[120px_1fr_auto] ${borderColor} cursor-pointer bg-slate-600/30 px-4 py-2 hover:bg-slate-600/50`}
                           key={label}
                           onClick={() => handleExLink(label, link)}
                         >
@@ -135,7 +135,7 @@ const ContactSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="space-y-4 rounded-2xl border border-gray-700 bg-gray-900 p-6">
+            <div className="space-y-4 rounded-2xl border border-slate-700 bg-slate-900 p-6">
               <div className="flex items-start gap-2">
                 <MessageSquareText size={24} className="text-violet-400" />
                 <div className="flex flex-col">
@@ -182,7 +182,7 @@ const ContactSection = () => {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-sky-600 to-violet-600 py-2.5 text-sm font-semibold text-white transition-all hover:from-sky-500 hover:to-violet-500 disabled:opacity-60"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 disabled:opacity-60"
                   >
                     {isSaving ? (
                       <Loader2 size={16} className="animate-spin" />

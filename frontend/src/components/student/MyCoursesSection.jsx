@@ -156,7 +156,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
         <div className="space-y-5">
           {/* Filter bar */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 rounded-lg border border-gray-600 bg-gray-800 px-4 py-2.5 transition-all focus-within:border-sky-500">
+            <div className="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 transition-all focus-within:border-blue-500">
               <Search size={15} className="shrink-0 text-gray-500" />
               <input
                 type="text"
@@ -179,7 +179,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
               <select
                 value={filterLevel}
                 onChange={(e) => setFilterLevel(e.target.value)}
-                className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+                className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
               >
                 <option value="all">All Levels</option>
                 {["3", "4", "5", "6"].map((l) => (
@@ -191,7 +191,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
               <select
                 value={filterSemester}
                 onChange={(e) => setFilterSemester(e.target.value)}
-                className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+                className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
               >
                 <option value="all">All Semesters</option>
                 {["1", "2"].map((s) => (
@@ -203,7 +203,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
               <select
                 value={filterCredit}
                 onChange={(e) => setFilterCredit(e.target.value)}
-                className="rounded-lg border border-gray-600 bg-gray-800 px-3 py-1.5 text-xs text-white transition-all focus:border-sky-500 focus:outline-none"
+                className="rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs text-white transition-all focus:border-blue-500 focus:outline-none"
               >
                 <option value="all">All Credits</option>
                 {availableCredits.map((c) => (
@@ -226,7 +226,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-gray-700 bg-gray-900 px-5 py-4">
+          <div className="rounded-2xl border border-blue-700 bg-blue-600/20 px-5 py-2">
             <h3 className="font-semibold text-white">
               Selected Courses ( {user.courses.length} )
             </h3>
@@ -240,14 +240,14 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                   <h3 className="mb-3 px-1 text-sm font-semibold tracking-wider text-gray-400 uppercase">
                     {group}
                   </h3>
-                  <div className="divide-y divide-gray-700/50 overflow-hidden rounded-2xl border border-gray-700 bg-gray-900">
+                  <div className="divide-y divide-slate-700/50 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900">
                     {groupCourses.map((item) => {
                       const course = item.course;
                       if (!course) return null;
                       return (
                         <div
                           key={item._id || course._id}
-                          className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-800/30"
+                          className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-slate-800/30"
                         >
                           <div className="min-w-0 flex-1">
                             <div className="mb-0.5 flex items-center gap-2">
@@ -275,7 +275,7 @@ const MyCoursesSection = ({ onCourseRemoved }) => {
                                   handleGradeChange(course._id, e.target.value)
                                 }
                                 disabled={updatingGrade === course._id}
-                                className={`appearance-none rounded-lg border border-gray-600 bg-gray-800 py-1.5 pr-7 pl-3 text-sm font-semibold transition-all focus:border-sky-500 focus:outline-none ${gradeColor(item.grade)} ${updatingGrade === course._id ? "opacity-60" : ""}`}
+                                className={`appearance-none rounded-lg border border-slate-600 bg-slate-800 py-1.5 pr-7 pl-3 text-sm font-semibold transition-all focus:border-blue-500 focus:outline-none ${gradeColor(item.grade)} ${updatingGrade === course._id ? "opacity-60" : ""}`}
                               >
                                 <option
                                   value=""

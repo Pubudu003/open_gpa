@@ -24,30 +24,6 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   const [saving, setSaving] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
-  /*
-  // temporary fix for issue where the gpa details are not refreshed after course grade change.
-  const [gpaData, setGpaData] = useState({ gpa: 0, totalCredits: 0 });
-
-  const fetchGpaData = useCallback(async () => {
-    try {
-      const gpaRes = await axiosInstance.get("/student/gpa");
-      setGpaData(gpaRes.data.userGPA || { gpa: 0, totalCredits: 0 });
-    } catch {
-      if (!user?.degree?._id) {
-        toast.error("You have not selected a degree!");
-      } else {
-        toast.error("Failed to load GPA. Please try again.");
-      }
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchGpaData();
-  }, [fetchGpaData]);
-
-  //=========================================================================
-  */
-
   useEffect(() => {
     const fetchDegrees = async () => {
       setLoading(true);
@@ -117,7 +93,6 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
   };
 
   const isDirty = selectedDegree && selectedDegree !== user?.degree?._id;
-  //const isDirty = true;
 
   // Immediately, even before the degrees array arrives form the API, we need to have a fallback label for the degree picker
   const fallbackLabel = user?.degree
@@ -141,15 +116,15 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
 
       <div className="space-y-6">
         {/* Info card */}
-        <div className="rounded-2xl border border-gray-700 bg-gray-900 p-6">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <div className="mb-6 flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-sky-500 to-violet-600 text-2xl font-bold text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-700 text-2xl font-bold text-white">
               {user?.userName?.[0]?.toUpperCase() || "S"}
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">{user?.userName}</h3>
               <p className="text-sm text-gray-400">{user?.email}</p>
-              <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-sky-500/15 px-2.5 py-0.5 text-xs font-medium text-sky-400 capitalize">
+              <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-blue-500/15 px-2.5 py-0.5 text-xs font-medium text-sky-400 capitalize">
                 <User size={10} /> {user?.role}
               </span>
             </div>
@@ -158,7 +133,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
             {GPA_CARD_VALUES.map(({ label, value, icon: Icon, color }) => (
               <div
                 key={label}
-                className="rounded-xl bg-gray-800/50 p-4 text-center"
+                className="rounded-xl bg-slate-800/50 p-4 text-center"
               >
                 <Icon size={20} className={`${color} mx-auto mb-1`} />
                 <p className={`text-2xl font-bold ${color}`}>{value}</p>
@@ -169,14 +144,15 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
         </div>
 
         {/* Degree picker */}
-        <div className="rounded-2xl border border-gray-700 bg-gray-900 p-6">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
-            <GraduationCap size={18} className="text-sky-400" /> Enrolled Degree
+            <GraduationCap size={18} className="text-blue-400" /> Enrolled
+            Degree
           </h3>
 
           {user?.degree ? (
-            <div className="mb-4 rounded-xl border border-sky-500/20 bg-sky-500/10 p-4">
-              <p className="font-semibold wrap-break-word text-sky-400">
+            <div className="mb-4 rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
+              <p className="font-semibold wrap-break-word text-blue-400">
                 {user.degree.degreeName}
               </p>
               <p className="text-sm text-gray-400">
@@ -226,7 +202,7 @@ const ProfileSection = ({ user, onProfileUpdate }) => {
               <button
                 onClick={handleSave}
                 disabled={saving || !selectedDegree}
-                className="flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-500 disabled:bg-gray-500/50 disabled:opacity-60"
+                className="hover:bg-blue -500 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors disabled:bg-gray-500/50 disabled:opacity-60"
               >
                 {saving ? (
                   <Loader2 size={15} className="animate-spin" />
