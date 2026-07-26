@@ -104,14 +104,15 @@ export const useAuthStore = create((set) => ({
   verifyEmail: async (verificationCode) => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.post("/verify-email", {
+      const res = await axiosInstance.post("/auth/verify-email", {
         verificationCode,
       });
       set({ user: res.data.user, isLoading: false });
       toast.success(res.data.message || "User verified successfully");
-      return { success: true };
+      return { success: true, role: res.data.user.role };
     } catch (error) {
-      const msg = error.response?.data?.message || "Verification failed";
+      const msg =
+        error.response?.data?.message || "Verification failed, Try Resend.";
       toast.error(msg);
       return { success: false };
     } finally {
@@ -122,7 +123,7 @@ export const useAuthStore = create((set) => ({
   resendVerificationCode: async () => {
     set({ isLoading: true });
     try {
-      const res = await axiosInstance.post("/resend-verification-code");
+      const res = await axiosInstance.post("/auth/resend-verification-code");
       toast.success(
         res.data.message || "Verification code resend to your email",
       );

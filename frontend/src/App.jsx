@@ -11,17 +11,47 @@ import Footer from "./components/layout/Footer";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import StudentDashboardPage from "./pages/StudentDashboardPage";
+import EmailVerificationPage from "./pages/EmailVerificationPage";
 
 // --- Route Guards --------------------------------------------------------------------
 const ProtectedRoute = ({ children }) => {
   const { user, checkingAuth } = useAuthStore();
+  const location = useLocation();
   if (checkingAuth)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950">
+      <div className="flex min-h-screen items-center justify-center bg-slate-950">
         <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   if (!user) return <Navigate to="/signin" replace />;
+
+  if (!user.isVerified && location.pathname !== "/verify-email") {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  return children;
+};
+
+const UnVerifiedRoute = ({ children }) => {
+  const { user, checkingAuth } = useAuthStore();
+  if (checkingAuth)
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950">
+        <LoadingSpinner size="lg" text="Loading..." />
+      </div>
+    );
+
+  if (!user) return <Navigate to="/signin" replace />;
+
+  if (user.isVerified) {
+    return (
+      <Navigate
+        to={user?.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+        replace
+      />
+    );
+  }
+
   return children;
 };
 
@@ -109,6 +139,16 @@ function App() {
           }
         />
 
+        {/* Unverified User */}
+        <Route
+          path="/verify-email"
+          element={
+            <UnVerifiedRoute>
+              <EmailVerificationPage />
+            </UnVerifiedRoute>
+          }
+        />
+
         {/* Admin */}
         <Route
           path="/admin/dashboard"
@@ -136,8 +176,6 @@ function App() {
         {/* Fallback} */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-
-      {/*!hideFooter && <Footer />*/}
     </div>
   );
 }

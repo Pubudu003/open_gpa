@@ -2,11 +2,16 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { redis } from "../lib/redis.js";
 import transporter from "../config/mail.js";
+import crypto from "crypto";
 
 const generateTokens = async (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
-  });
+  const accessToken = await jwt.sign(
+    { userId },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15m",
+    },
+  );
 
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
@@ -15,31 +20,28 @@ const generateTokens = async (userId) => {
   return { accessToken, refreshToken };
 };
 
-const generateVerificationCode = () => {
-  const verificationCode = Math.floor(
-    100000 + Math.random() * 900000,
-  ).toString();
-
-  return { verificationCode };
+const generateSecreteCode = async () => {
+  const secretCode = Math.floor(100000 + Math.random() * 900000);
+  return { secretCode };
 };
 
-const storeVerificationCode = async (userId, verificationCode) => {
+const storeSecretCode = async (userId, secretCode, key) => {
   try {
-    await redis.set(`verification:${userId}`, verificationCode, "EX", 600); // 10 min
+    await redis.set(`${key}:${userId}`, secretCode, "EX", 600); // 10 min
     return true;
   } catch (error) {
-    console.log("Verification code storing failed in redis", error);
+    console.log(`Secret code storing failed in redis: ${error}`);
     return false;
   }
 };
 
-const sendVerificationEmail = async (receiver, verificationCode) => {
+const sendEmail = async (receiver, secretCode, subject, body) => {
   try {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: receiver,
-      subject: "Verify your Email",
-      html: `This is your verification code: ${verificationCode}`,
+      subject,
+      html: `${body}: ${secretCode}`,
     });
 
     return true;
@@ -108,14 +110,17 @@ export const signup = async (req, res) => {
 
     // send verification code
     try {
-      const { verificationCode } = await generateVerificationCode();
-      const isCodeStored = await storeVerificationCode(
+      const { secretCode } = await generateSecreteCode();
+      const isCodeStored = await storeSecretCode(
         user._id,
-        verificationCode,
+        secretCode,
+        "verification",
       );
 
       if (isCodeStored) {
-        isEmailSent = await sendVerificationEmail(email, verificationCode);
+        const subject = "Verify your account";
+        const body = "Your verification code is";
+        isEmailSent = await sendEmail(email, secretCode, subject, body);
       } else {
         return res.status(201).json({
           success: true,
@@ -204,7 +209,9 @@ export const signin = async (req, res) => {
     return res.status(200).json({
       success: true,
       user: finalUser,
-      message: "You have successfully signed in",
+      message: user.isVerified
+        ? "You have successfully logged in"
+        : "Check your email to verify your account",
     });
   } catch (error) {
     console.log("Error in login controller: ", error);
@@ -312,10 +319,10 @@ export const refreshToken = async (req, res) => {
 // verify email
 export const verifyEmail = async (req, res) => {
   try {
-    const { verificationCode } = req.body;
+    const secretCode = req.body.verificationCode;
     const userId = req.user._id;
 
-    if (!verificationCode) {
+    if (!secretCode) {
       return res.status(400).json({
         success: false,
         errorCode: "MISSING_VERIFICATION_CODE",
@@ -323,9 +330,8 @@ export const verifyEmail = async (req, res) => {
       });
     }
 
-    const savedVerificationCode = await redis.get(`verification:${userId}`);
-
-    if (!savedVerificationCode) {
+    const storedSecretCode = await redis.get(`verification:${userId}`);
+    if (!storedSecretCode) {
       return res.status(400).json({
         success: false,
         errorCode: "VERIFICATION_CODE_NOT_FOUND",
@@ -333,11 +339,11 @@ export const verifyEmail = async (req, res) => {
       });
     }
 
-    if (savedVerificationCode !== verificationCode) {
+    if (storedSecretCode !== secretCode) {
       return res.status(400).json({
         success: false,
         errorCode: "INVALID_VERIFICATION_CODE",
-        message: "Invalid verification code",
+        message: "Your verification code is invalid",
       });
     }
 
@@ -367,6 +373,7 @@ export const verifyEmail = async (req, res) => {
 // resend code
 export const resendVerificationCode = async (req, res) => {
   try {
+    console.log("resendVerificationCode backend controller triggered...");
     const user = req.user;
 
     if (user.isVerified) {
@@ -390,10 +397,11 @@ export const resendVerificationCode = async (req, res) => {
     }
 
     // send verification code
-    const { verificationCode } = await generateVerificationCode();
-    const isCodeStored = await storeVerificationCode(
+    const { secretCode } = await generateSecreteCode();
+    const isCodeStored = await storeSecretCode(
       user._id,
-      verificationCode,
+      secretCode,
+      "verification",
     );
     if (!isCodeStored) {
       return res.status(400).json({
@@ -403,10 +411,9 @@ export const resendVerificationCode = async (req, res) => {
       });
     }
 
-    const isEmailSent = await sendVerificationEmail(
-      user.email,
-      verificationCode,
-    );
+    const subject = "Verify your email";
+    const body = "Your verification code is";
+    const isEmailSent = await sendEmail(user.email, secretCode, subject, body);
     if (!isEmailSent) {
       return res.status(400).json({
         success: false,
@@ -424,6 +431,87 @@ export const resendVerificationCode = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in resendVerificationCode controller: ", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_EMAIL",
+        message: "Email address is required to reset your password.",
+      });
+    }
+
+    // check if a cooldown is active in redis
+    const cooldownKey = `cooldown:reset-password:${email}`;
+    const isCooldownActive = await redis.get(cooldownKey);
+
+    if (isCooldownActive) {
+      return res.status(429).json({
+        success: false,
+        errorCode: "COOLDOWN_ACTIVE",
+        message:
+          "A password reset link has already been sent to this email. Please wait 60 seconds before requesting another link.",
+      });
+    }
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      // Generate Token
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(rawToken)
+        .digest("hex");
+
+      // store hashed token
+      const isTokenStored = await storeSecretCode(
+        userExists._id,
+        hashedToken,
+        "reset-password",
+      );
+
+      if (!isTokenStored) {
+        return res.status(500).json({
+          success: false,
+          errorCode: "SERVER_ERROR",
+          message: "Something went wrong. Please try again later.",
+        });
+      }
+
+      const subject = "Reset your password";
+      const body = "Your password reset link: ";
+      const resetLink = `http://localhost:5173/reset-password?token=${rawToken}`;
+
+      const isEmailSent = await sendEmail(email, resetLink, subject, body);
+      if (!isEmailSent) {
+        return res.status(500).json({
+          success: false,
+          errorCode: "SERVER_ERROR",
+          message: "Something went wrong. Please try again later.",
+        });
+      }
+    }
+
+    // Set the cooldown flag in redis for 60s
+    await redis.set(cooldownKey, "true", "EX", 60);
+
+    return res.status(200).json({
+      success: true,
+      message: "A password reset link sent to your email",
+    });
+  } catch (error) {
+    console.log("Error in forgotPassword controller: ", error);
     return res.status(500).json({
       success: false,
       errorCode: "CONTROLLER_ERROR",

@@ -59,7 +59,7 @@ const SignInPage = () => {
         </div>
 
         {/* --- Card --- */}
-        <div className="rounded-2xl border border-gray-700/60 bg-gray-900/80 p-8 shadow-2xl backdrop-blur-sm">
+        <div className="rounded-2xl border border-slate-700/60 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-sm">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* --- Email --- */}
             <div>
@@ -127,15 +127,26 @@ const SignInPage = () => {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-400">
-            Don't have an account?{" "}
-            <Link
-              to={"/signup"}
-              className="font-medium text-blue-400 transition-colors hover:text-sky-300"
-            >
-              Sign up
-            </Link>
-          </p>
+          <div className="mt-6 space-y-1">
+            <p className="text-center text-sm text-gray-400">
+              Forgot your password?{" "}
+              <Link
+                to={"/reset-password"}
+                className="font-medium text-red-400 transition-colors hover:text-red-300"
+              >
+                Reset Password
+              </Link>
+            </p>
+            <p className="text-center text-sm text-gray-400">
+              Don't have an account?{" "}
+              <Link
+                to={"/signup"}
+                className="font-medium text-blue-400 transition-colors hover:text-sky-300"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
       </Motion.div>
     </div>

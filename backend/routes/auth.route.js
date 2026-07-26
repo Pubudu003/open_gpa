@@ -6,6 +6,7 @@ import {
   refreshToken,
   verifyEmail,
   resendVerificationCode,
+  forgotPassword,
 } from "../controllers/auth.controller.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
 
@@ -21,5 +22,6 @@ router.post(
   protectedRoute,
   resendVerificationCode,
 );
+router.post("/forgot-password", forgotPassword);
 
 export default router;
