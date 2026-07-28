@@ -25,9 +25,9 @@ const generateSecreteCode = async () => {
   return { secretCode };
 };
 
-const storeSecretCode = async (userId, secretCode, key) => {
+const storeSecretCode = async (keyValue, storingValue, keyName) => {
   try {
-    await redis.set(`${key}:${userId}`, secretCode, "EX", 600); // 10 min
+    await redis.set(`${keyName}:${keyValue}`, storingValue, "EX", 600); // 10 min
     return true;
   } catch (error) {
     console.log(`Secret code storing failed in redis: ${error}`);
@@ -351,7 +351,9 @@ export const verifyEmail = async (req, res) => {
       { _id: userId },
       { $set: { isVerified: true } },
       { returnDocument: "after" },
-    ).select("-password");
+    )
+      .populate("degree courses.course")
+      .select("-password");
 
     await redis.del(`verification:${userId}`);
 
@@ -466,6 +468,14 @@ export const forgotPassword = async (req, res) => {
 
     const userExists = await User.findOne({ email });
 
+    if (userExists && !userExists.isVerified) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "USER_NOT_VERIFIED",
+        message: "Please verify your email before resetting your password.",
+      });
+    }
+
     if (userExists) {
       // Generate Token
       const rawToken = crypto.randomBytes(32).toString("hex");
@@ -476,8 +486,8 @@ export const forgotPassword = async (req, res) => {
 
       // store hashed token
       const isTokenStored = await storeSecretCode(
-        userExists._id,
         hashedToken,
+        userExists._id,
         "reset-password",
       );
 
@@ -512,6 +522,77 @@ export const forgotPassword = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in forgotPassword controller: ", error);
+    return res.status(500).json({
+      success: false,
+      errorCode: "CONTROLLER_ERROR",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { newPassword, token } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "MISSING_NEW_PASSWORD",
+        message: "New password is required to reset your password.",
+      });
+    }
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "SERVER_ERROR",
+        message: "Something went wrong. Please try again later.",
+      });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const userId = await redis.get(`reset-password:${hashedToken}`);
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "INVALID_TOKEN",
+        message: "Invalid or expired token",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        errorCode: "INVALID_TOKEN",
+        message: "Invalid or expired token",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+    await user.populate("degree courses.course");
+
+    const safeUser = user.toObject();
+    delete safeUser.password;
+
+    await redis.del(
+      `reset-password:${hashedToken}`,
+      `cooldown:reset-password:${user.email}`,
+      `refresh_token:${user._id}`,
+    );
+
+    // notify the user by email - password was reset. if that wasnt you, contact support.
+
+    return res.status(200).json({
+      success: true,
+      user: safeUser,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.log("Error in resetPassword controller: ", error);
     return res.status(500).json({
       success: false,
       errorCode: "CONTROLLER_ERROR",

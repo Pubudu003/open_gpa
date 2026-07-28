@@ -8,7 +8,7 @@ import {
 
 export const getAllCourses = async (req, res) => {
   try {
-    const userDegreeId = req.user?.degree._id;
+    const userDegreeId = req.user?.degree?._id;
 
     if (!userDegreeId) {
       const errorMessage = req.user

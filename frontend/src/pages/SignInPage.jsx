@@ -22,10 +22,14 @@ const SignInPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await signin(form.email, form.password);
-    if (res.success) {
-      if (res.role === "admin") navigate("/admin/dashboard");
-      else navigate("/dashboard");
+    try {
+      const res = await signin(form.email, form.password);
+      if (res.success) {
+        if (res.role === "admin") navigate("/admin/dashboard");
+        else navigate("/dashboard");
+      }
+    } catch (error) {
+      console.log("Sign in failed, handleSubmit error: ", error);
     }
   };
 
@@ -50,7 +54,7 @@ const SignInPage = () => {
         className="relative w-full max-w-md"
       >
         {/* --- Logo ---*/}
-        <div className="mb-8 flex flex-col items-center">
+        <div className="mb-8 flex flex-col items-center space-y-2">
           <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 p-2 shadow-lg shadow-blue-400/30">
             <GraduationCap size={32} className="text-white" />
           </div>
@@ -129,12 +133,12 @@ const SignInPage = () => {
 
           <div className="mt-6 space-y-1">
             <p className="text-center text-sm text-gray-400">
-              Forgot your password?{" "}
+              Trouble logging in? try{" "}
               <Link
-                to={"/reset-password"}
+                to="/forgot-password"
                 className="font-medium text-red-400 transition-colors hover:text-red-300"
               >
-                Reset Password
+                Forgot Password
               </Link>
             </p>
             <p className="text-center text-sm text-gray-400">

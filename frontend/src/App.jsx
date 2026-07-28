@@ -12,6 +12,8 @@ import LoadingSpinner from "./components/ui/LoadingSpinner";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import StudentDashboardPage from "./pages/StudentDashboardPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
 
 // --- Route Guards --------------------------------------------------------------------
 const ProtectedRoute = ({ children }) => {
@@ -135,6 +137,22 @@ function App() {
           element={
             <GuestRoute>
               <SignUpPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <GuestRoute>
+              <ForgotPasswordPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <GuestRoute>
+              <PasswordResetPage />
             </GuestRoute>
           }
         />

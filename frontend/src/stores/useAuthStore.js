@@ -138,6 +138,59 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  forgotPassword: async (email) => {
+    set({ isLoading: true });
+    try {
+      const res = await axiosInstance.post("/auth/forgot-password", { email });
+      toast.success(
+        res.data.message ||
+          "A password reset link has been sent to your email address.",
+      );
+      return { success: true };
+    } catch (error) {
+      console.log("Failed to send password reset link", error);
+      const msg =
+        error.response?.data?.message || "Failed to send password reset link";
+      toast.error(msg);
+      return { success: false };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  // Need to create resetPassword..........
+  resetPassword: async (newPassword, confirmPassword, token) => {
+    set({ isLoading: true });
+    try {
+      if (!token) {
+        set({ isLoading: false });
+        toast.error("Something went wrong. Please try again later.");
+        return { success: false };
+      }
+
+      if (newPassword !== confirmPassword) {
+        set({ isLoading: false });
+        toast.error("Password not match");
+        return { success: false };
+      }
+
+      const res = await axiosInstance.post("/auth/reset-password", {
+        newPassword,
+        token,
+      });
+      set({ user: res.data.user, isLoading: false });
+      toast.success("Password reset successfully");
+      return { success: true };
+    } catch (error) {
+      console.log("Failed to reset password", error);
+      const msg = error.response?.data?.message || "Failed to reset password";
+      toast.error(msg);
+      return { success: false };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   // --- User State ---
   setUser: (user) => set({ user }),
 }));
