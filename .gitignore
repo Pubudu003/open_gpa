@@ -55,6 +55,14 @@ coverage/
 .vercel/
 
 # ==========================
+# Playwright test files
+# ==========================
+playwright-report/
+test-results/
+
+# ==========================
 # Temporary Files
 # ==========================
 *.tmp
+*.xlsx
+

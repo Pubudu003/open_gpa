@@ -102,6 +102,8 @@ export const signup = async (req, res) => {
     }
 
     const user = await User.create({ userName, email, password });
+    const safeUser = user.toObject();
+    delete safeUser.password;
 
     // authenticate
     const { accessToken, refreshToken } = await generateTokens(user._id);
@@ -124,12 +126,7 @@ export const signup = async (req, res) => {
       } else {
         return res.status(201).json({
           success: true,
-          user: {
-            _id: user._id,
-            userName: user.userName,
-            email: user.email,
-            role: user.role,
-          },
+          user: safeUser,
           isEmailSent: false,
           errorCode: "CODE_NOT_STORED",
           message:
@@ -140,12 +137,7 @@ export const signup = async (req, res) => {
       console.log("Error in sending verification code", error);
       return res.status(201).json({
         success: true,
-        user: {
-          _id: user._id,
-          userName: user.userName,
-          email: user.email,
-          role: user.role,
-        },
+        user: safeUser,
         isEmailSent: false,
         errorCode: "VERIFICATION_CODE_SENDING_FAILED",
         message:
@@ -155,12 +147,7 @@ export const signup = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      user: {
-        _id: user._id,
-        userName: user.userName,
-        email: user.email,
-        role: user.role,
-      },
+      user: safeUser,
       isEmailSent,
       message: "You have successfully signed up",
     });
@@ -375,7 +362,6 @@ export const verifyEmail = async (req, res) => {
 // resend code
 export const resendVerificationCode = async (req, res) => {
   try {
-    console.log("resendVerificationCode backend controller triggered...");
     const user = req.user;
 
     if (user.isVerified) {
@@ -468,14 +454,6 @@ export const forgotPassword = async (req, res) => {
 
     const userExists = await User.findOne({ email });
 
-    if (userExists && !userExists.isVerified) {
-      return res.status(400).json({
-        success: false,
-        errorCode: "USER_NOT_VERIFIED",
-        message: "Please verify your email before resetting your password.",
-      });
-    }
-
     if (userExists) {
       // Generate Token
       const rawToken = crypto.randomBytes(32).toString("hex");
@@ -501,10 +479,13 @@ export const forgotPassword = async (req, res) => {
 
       const subject = "Reset your password";
       const body = "Your password reset link: ";
-      const resetLink = `http://localhost:5173/reset-password?token=${rawToken}`;
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      const resetLink = `${frontendUrl}/reset-password?token=${rawToken}`;
 
       const isEmailSent = await sendEmail(email, resetLink, subject, body);
       if (!isEmailSent) {
+        await redis.del(`reset-password:${hashedToken}`);
+
         return res.status(500).json({
           success: false,
           errorCode: "SERVER_ERROR",
@@ -577,6 +558,11 @@ export const resetPassword = async (req, res) => {
 
     const safeUser = user.toObject();
     delete safeUser.password;
+
+    const { accessToken, refreshToken } = await generateTokens(userId);
+
+    await storeRefreshToken(userId, refreshToken);
+    setCookies(res, accessToken, refreshToken);
 
     await redis.del(
       `reset-password:${hashedToken}`,
