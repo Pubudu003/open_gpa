@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
+    if (mongoose.connection.readyState >= 1) return;
+
     const env = process.env.NODE_ENV || "development";
 
     const uri =
@@ -11,15 +13,10 @@ export const connectDB = async () => {
       console.log("No MONGO_URI found in environment variables");
     }
 
-    console.log("Using MongoDB URI:", uri);
-
-    if (mongoose.connection.readyState !== 1) {
-      const conn = await mongoose.connect(uri);
-      console.log(`MongoDB connected: ${conn.connection.host}`);
-    }
+    const conn = await mongoose.connect(uri);
+    console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
     console.log("Error connecting to the DB:", error.message);
-    process.exit(1);
   }
 };
 

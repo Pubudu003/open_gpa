@@ -9,6 +9,7 @@ import studentRoutes from "./routes/student.route.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,12 +24,23 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+
+/*app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.log("Database connection failure", error);
+    res.status(500).json({ message: "Database connection failure" });
+  }
+});*/
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/student", studentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-
-  connectDB();
 });
+
+export default app;
