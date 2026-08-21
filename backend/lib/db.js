@@ -13,7 +13,10 @@ export const connectDB = async () => {
       console.log("No MONGO_URI found in environment variables");
     }
 
-    const conn = await mongoose.connect(uri);
+    const conn = await mongoose.connect(uri, {
+      connectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
     console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
     console.log("Error connecting to the DB:", error.message);

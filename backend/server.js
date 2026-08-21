@@ -9,7 +9,7 @@ import studentRoutes from "./routes/student.route.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
-connectDB();
+await connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
