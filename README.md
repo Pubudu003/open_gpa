@@ -15,10 +15,10 @@ A full-stack GPA calculation and academic management platform built for the stud
 
 ## 📸 Screenshots
 
-### Dashboard
+### Landing Page
 
-![Dashboard](./docs/screenshots/dashboard.png)
+![Dashboard](./docs/screen-shots/landing.png)
 
-### GPA Calculator
+### Sign Up 
 
-![GPA Calculator](./docs/screenshots/gpa-calculator.png)
+![GPA Calculator](./docs/screen-shots/signup.png)
