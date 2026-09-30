@@ -39,4 +39,12 @@ A full-stack GPA calculation and academic management platform built for the stud
 
 ![Student Dashboard](./docs/screen-shots/student_dashboard.png)
 
+## 🎥 Demo
 
+### Student User Demo
+
+![Student User Demo](./docs/videos/student_dashboard_demo.mp4)
+
+### Admin User Demo
+
+![Admin User Demo](./docs/videos/admin_dashboard_demo.mp4)
