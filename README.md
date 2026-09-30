@@ -21,4 +21,22 @@ A full-stack GPA calculation and academic management platform built for the stud
 
 ### Sign Up 
 
-![GPA Calculator](./docs/screen-shots/signup.png)
+![Sign Up](./docs/screen-shots/signup.png)
+
+### Sign In
+
+![Sign In](./docs/screen-shots/signin.png)
+
+### Forgot Password
+
+![Forgot Password](./docs/screen-shots/forgot_password.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](./docs/screen-shots/admin_dashboard_courses_page.png)
+
+### Student Dashboard
+
+![Student Dashboard](./docs/screen-shots/student_dashboard.png)
+
+
