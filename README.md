@@ -39,12 +39,55 @@ A full-stack GPA calculation and academic management platform built for the stud
 
 ![Student Dashboard](./docs/screen-shots/student_dashboard.png)
 
-## 🎥 Demo
+## ✨ Features
 
-### Student User Demo
+### 🔐 Authentication
 
-[▶️ Watch Student User Demo](./docs/videos/student_dashboard_demo.mp4)
+- User registration
+- Email verification
+- Password reset
 
-### Admin User Demo
+### 👤 Student
 
-[▶️ Watch Admin User Demo]](./docs/videos/admin_dashboard_demo.mp4)
+- Select degree
+- Change degree
+- Select courses
+- Select grade
+- View calculated GPA
+- Manage courses
+- Send feedback
+
+### 👨‍💼 Admin
+
+- Manage degrees
+- Manage courses
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React
+- Tailwind CSS
+- Axios
+
+### Backend
+
+- Node.js
+- Express.js
+
+### Database
+
+- MongoDB
+- Mongoose
+
+### Authentication
+
+- JWT
+- bcrypt
+- Nodemailer
+
+### Development
+
+- Git
+- GitHub
+- ESLint
