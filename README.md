@@ -80,7 +80,7 @@ A full-stack GPA calculation and academic management platform built for the stud
 - MongoDB
 - Mongoose
 
-### Authentication
+###  Authentication
 
 - JWT
 - bcrypt
@@ -91,3 +91,111 @@ A full-stack GPA calculation and academic management platform built for the stud
 - Git
 - GitHub
 - ESLint
+
+## 🏗️ Architecture
+
+## 📁 Project Structure
+
+```text
+project/
+|--frontend/
+|  |--assets/
+|  |--public/
+|  |--src/
+|  |  |--components/
+|  |  |--lib/
+|  |  |--pages/
+|  |  |--stores/
+|--backend/
+|  |  |--config/
+|  |  |--controllers/
+|  |  |--lib/
+|  |  |--middleware/
+|  |  |--models/
+|  |  |--routes/
+|  |  |--utils/
+|--docs/
+|--README.md
+```
+## 🗄️ Database
+
+The application uses MongoDB
+
+### Main Collections
+
+- Users
+- Degrees
+- Courses
+- Feedbacks
+
+## 🔐 Security
+
+- Passwords are hashed using bcrypt
+- Authentication uses JWT
+- Protected routes use authentication middleware
+- Sensitive configuration is stored in environment variable
+- User input is validated before processing
+
+## 🧪 Testing
+
+## 🚀 Deployment
+
+### Frontend and Backend
+
+Depolyed using Vercel
+
+### Database
+
+MongoDB Atlas
+
+## 🗺️ Roadmap
+
+- [x] User authentication
+- [x] Email verification
+- [x] Password reset
+- [x] Degrees and Courses management 
+- [x] GPA calculation
+- [x] Admin and Student Dashboards
+- [ ] Student grades insights
+- [ ] AI assistant
+- [ ] Download detailed report
+
+## 📚 Lessons Learned
+
+During development, I learned:
+
+- How to design a REST API
+- Implementing JWT authentication
+- Working with MongoDB relationships
+- Handling email verification
+- Managing authentication middleware
+- Deploying a full-stack application
+
+## 🧠 Challenges & Solutions
+
+### Email Verification
+
+**Problem:** Verification emails were occasionally delayed.
+
+**Solution:** Implemented a token-based verification system with
+expiration and retry handling.
+
+### Authentication
+
+**Problem:** Protected routes needed consistent authentication.
+
+**Solution:** Implemented reusable authentication middleware.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+**Pubudu**
+
+BSc (Hons) in Computer Science
+
+- GitHub: ...
+- LinkedIn: ...
+- Portfolio: ...
