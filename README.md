@@ -243,17 +243,17 @@ During development, I learned:
 ### Email Verification
 
 
-**Problem:** ??????????????
+**Problem:** Coordinating JWT authentication, Redis, password reset, and SMTP email verification caused credential and initialization issues.
 
-**Solution:** ?????????????
-
-
-### Authentication
+**Solution:** Fixed environment-variable initialization and structured the authentication flow to reliably handle registration, verification, login, and password reset.
 
 
-**Problem:** ??????????????
+### Cross-Platform Development
 
-**Solution:** ?????????????
+
+**Problem:** Migrating the project from Windows to Ubuntu caused platform-specific dependency errors.
+
+**Solution:** Removed the existing node_modules and reinstalled dependencies on Ubuntu to ensure Linux-compatible packages were used.
 
 
 ## 📄 License
