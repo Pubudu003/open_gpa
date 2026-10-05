@@ -175,16 +175,15 @@ During development, I learned:
 
 ### Email Verification
 
-**Problem:** Verification emails were occasionally delayed.
+**Problem:** ??????????????
 
-**Solution:** Implemented a token-based verification system with
-expiration and retry handling.
+**Solution:** ?????????????
 
 ### Authentication
 
-**Problem:** Protected routes needed consistent authentication.
+**Problem:** ??????????????
 
-**Solution:** Implemented reusable authentication middleware.
+**Solution:** ?????????????
 
 ## 📄 License
 
@@ -194,8 +193,7 @@ This project is licensed under the MIT License.
 
 **Pubudu**
 
-BSc (Hons) in Computer Science
+BSc (Hons) in Information Technology
 
-- GitHub: ...
-- LinkedIn: ...
-- Portfolio: ...
+- GitHub: https://github.com/Pubudu003
+- LinkedIn: https://www.linkedin.com/in/pubudu-lakshan-e04/
