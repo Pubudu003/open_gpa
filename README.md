@@ -1,5 +1,7 @@
 # OPEN GPA (GPA Calculator v2.0)
 
+
+
 A full-stack GPA calculation and academic management platform built for the students of Open University of Sri Lanka.
 
 ![React](https://img.shields.io/badge/React-19-blue)
@@ -13,41 +15,61 @@ A full-stack GPA calculation and academic management platform built for the stud
 
 📦 **Repository:** https://github.com/Pubudu003/open_gpa/
 
+
 ## 📸 Screenshots
+
+
 
 ### Landing Page
 
+
 ![Dashboard](./docs/screen-shots/landing.png)
+
 
 ### Sign Up 
 
+
 ![Sign Up](./docs/screen-shots/signup.png)
+
 
 ### Sign In
 
+
 ![Sign In](./docs/screen-shots/signin.png)
+
 
 ### Forgot Password
 
+
 ![Forgot Password](./docs/screen-shots/forgot_password.png)
+
 
 ### Admin Dashboard
 
+
 ![Admin Dashboard](./docs/screen-shots/admin_dashboard_courses_page.png)
+
 
 ### Student Dashboard
 
+
 ![Student Dashboard](./docs/screen-shots/student_dashboard.png)
+
 
 ## ✨ Features
 
+
+
 ### 🔐 Authentication
+
 
 - User registration
 - Email verification
 - Password reset
 
+
 ### 👤 Student
+
 
 - Select degree
 - Change degree
@@ -57,44 +79,63 @@ A full-stack GPA calculation and academic management platform built for the stud
 - Manage courses
 - Send feedback
 
+
 ### 👨‍💼 Admin
+
 
 - Manage degrees
 - Manage courses
 
+
 ## 🛠️ Tech Stack
 
+
+
 ### Frontend
+
 
 - React
 - Tailwind CSS
 - Axios
 
+
 ### Backend
+
 
 - Node.js
 - Express.js
 
+
 ### Database
+
 
 - MongoDB
 - Mongoose
 
+
 ###  Authentication
+
 
 - JWT
 - bcrypt
 - Nodemailer
 
+
 ### Development
+
 
 - Git
 - GitHub
 - ESLint
 
+
 ## 🏗️ Architecture
 
+
+
 ## 📁 Project Structure
+
+
 
 ```text
 project/
@@ -117,18 +158,27 @@ project/
 |--docs/
 |--README.md
 ```
+
+
 ## 🗄️ Database
+
+
 
 The application uses MongoDB
 
+
 ### Main Collections
+
 
 - Users
 - Degrees
 - Courses
 - Feedbacks
 
+
 ## 🔐 Security
+
+
 
 - Passwords are hashed using bcrypt
 - Authentication uses JWT
@@ -136,19 +186,30 @@ The application uses MongoDB
 - Sensitive configuration is stored in environment variable
 - User input is validated before processing
 
+
 ## 🧪 Testing
+
+
 
 ## 🚀 Deployment
 
+
+
 ### Frontend and Backend
+
 
 Depolyed using Vercel
 
+
 ### Database
+
 
 MongoDB Atlas
 
+
 ## 🗺️ Roadmap
+
+
 
 - [x] User authentication
 - [x] Email verification
@@ -160,7 +221,10 @@ MongoDB Atlas
 - [ ] AI assistant
 - [ ] Download detailed report
 
+
 ## 📚 Lessons Learned
+
+
 
 During development, I learned:
 
@@ -171,25 +235,37 @@ During development, I learned:
 - Managing authentication middleware
 - Deploying a full-stack application
 
+
 ## 🧠 Challenges & Solutions
+
+
 
 ### Email Verification
 
+
 **Problem:** ??????????????
 
 **Solution:** ?????????????
+
 
 ### Authentication
 
+
 **Problem:** ??????????????
 
 **Solution:** ?????????????
 
+
 ## 📄 License
+
+
 
 This project is licensed under the MIT License.
 
+
 ## 👨‍💻 Author
+
+
 
 **Pubudu**
 
